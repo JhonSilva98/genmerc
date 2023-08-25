@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genmerc/widgetPadrao/padrao.dart';
 
 class MyVender extends StatefulWidget {
   const MyVender({super.key});
@@ -8,10 +9,21 @@ class MyVender extends StatefulWidget {
 }
 
 class _MyVenderState extends State<MyVender> {
+  MyWidgetPadrao styleText = MyWidgetPadrao();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        decoration: BoxDecoration(
+          color: Color(0XFF5379a9),
+          /*gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 8, 45, 102),
+              Color.fromARGB(186, 7, 223, 230),
+            ],
+          ),*/
+        ),
         child: Column(
           children: [
             Padding(
@@ -24,31 +36,44 @@ class _MyVenderState extends State<MyVender> {
                     Expanded(
                       flex: 3,
                       child: TextField(
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
                         decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.grey), // Cor da borda
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                  50.0)), // Raio do canto da borda
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white, // Cor da borda branca
                             ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors
-                                      .blue), // Cor da borda quando focado
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0)),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(50.0),
                             ),
-                            hintText: 'Buscar'),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors
+                                  .white, // Cor da borda branca quando focado
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                          ),
+                          hintText: 'Buscar',
+                          hintStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
                     Flexible(
-                      flex: 1,
                       child: IconButton(
                         splashColor: Colors.blue,
                         color: Colors.blue,
                         iconSize: 50,
                         icon: Icon(
                           Icons.add_business,
+                          color: Colors.white,
                         ),
                         onPressed: () {},
                       ),
@@ -70,7 +95,7 @@ class _MyVenderState extends State<MyVender> {
                         width: MediaQuery.of(context).size.width / 2,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: Color.fromARGB(255, 158, 158, 158)),
+                            color: Color.fromARGB(230, 158, 158, 158)),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -80,63 +105,68 @@ class _MyVenderState extends State<MyVender> {
                                 scrollDirection: Axis.horizontal,
                                 child: DataTable(
                                   columns: [
-                                    DataColumn(label: Text('Posição')),
-                                    DataColumn(label: Text('Codigo')),
-                                    DataColumn(label: Text('Nome')),
-                                    DataColumn(label: Text('Valor Un.')),
-                                    DataColumn(label: Text('Quantidade')),
-                                    DataColumn(label: Text('Total')),
+                                    DataColumn(
+                                      label: Text(
+                                        'Posição',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'Codigo',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'Nome',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'Valor Un.',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'Quantidade',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'Total',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                                    ),
                                   ],
                                   rows: [
-                                    DataRow(cells: [
-                                      DataCell(Text('João')),
-                                      DataCell(Text('25')),
-                                      DataCell(Text('São Paulo')),
-                                      DataCell(Text('João')),
-                                      DataCell(Text('25')),
-                                      DataCell(Text('São Paulo')),
-                                    ]),
-                                    DataRow(cells: [
-                                      DataCell(Text('Maria')),
-                                      DataCell(Text('30')),
-                                      DataCell(Text('Rio de Janeiro')),
-                                      DataCell(Text('João')),
-                                      DataCell(Text('25')),
-                                      DataCell(Text('São Paulo')),
-                                    ]),
-                                    DataRow(cells: [
-                                      DataCell(Text('Carlos')),
-                                      DataCell(Text('22')),
-                                      DataCell(Text('Belo Horizonte')),
-                                      DataCell(Text('João')),
-                                      DataCell(Text('25')),
-                                      DataCell(Text('São Paulo')),
-                                    ]),
-                                    DataRow(cells: [
-                                      DataCell(Text('João')),
-                                      DataCell(Text('25')),
-                                      DataCell(Text('São Paulo')),
-                                      DataCell(Text('João')),
-                                      DataCell(Text('25')),
-                                      DataCell(Text('São Paulo')),
-                                    ]),
-                                    DataRow(cells: [
-                                      DataCell(Text('Maria')),
-                                      DataCell(Text('30')),
-                                      DataCell(Text('Rio de Janeiro')),
-                                      DataCell(Text('João')),
-                                      DataCell(Text('25')),
-                                      DataCell(Text('São Paulo')),
-                                    ]),
-                                    DataRow(cells: [
-                                      DataCell(Text('Carlos')),
-                                      DataCell(Text('22')),
-                                      DataCell(Text('Belo Horizonte')),
-                                      DataCell(Text('João')),
-                                      DataCell(Text('25')),
-                                      DataCell(Text('São Paulo')),
-                                    ]),
-
+                                    styleText.myDataRow,
+                                    styleText.myDataRow,
+                                    styleText.myDataRow,
+                                    styleText.myDataRow,
+                                    styleText.myDataRow,
+                                    styleText.myDataRow,
                                     // Adicione mais linhas conforme necessário
                                   ],
                                 ),
@@ -154,16 +184,19 @@ class _MyVenderState extends State<MyVender> {
                                       softWrap: false,
                                       style: TextStyle(
                                           fontSize: 50,
+                                          color: Colors.white,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   Flexible(
                                     child: Text(
-                                      "RS: 10,50",
+                                      "10,50",
                                       softWrap: false,
                                       style: TextStyle(
                                           fontSize: 50,
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                          color: const Color.fromARGB(
+                                              255, 248, 31, 16)),
                                     ),
                                   ),
                                 ],
@@ -180,7 +213,6 @@ class _MyVenderState extends State<MyVender> {
                           width: MediaQuery.of(context).size.width / 2,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: Color.fromARGB(151, 158, 158, 158),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -190,21 +222,45 @@ class _MyVenderState extends State<MyVender> {
                                   flex: 2,
                                   child: Card(
                                     elevation: 10,
-                                    child: ListTile(
-                                      leading: Icon(Icons.attach_money),
-                                      title: Text(
-                                        "Subtotal:",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color.fromARGB(131, 33, 149, 243),
+                                            Color.fromARGB(113, 155, 39, 176)
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
                                       ),
-                                      subtitle: Center(
-                                        child: Flexible(
-                                          child: Text(
-                                            "RS: 10,00",
-                                            style: TextStyle(
-                                                fontSize: 50,
-                                                fontWeight: FontWeight.bold),
+                                      child: ListTile(
+                                        leading: FittedBox(
+                                          fit: BoxFit.cover,
+                                          child: Icon(
+                                            Icons.attach_money,
+                                            color: Colors.white,
+                                            size: 100,
+                                            shadows: [
+                                              Shadow(
+                                                color: Colors.black,
+                                                offset: Offset(2, 2),
+                                                blurRadius: 3,
+                                              ),
+                                            ],
                                           ),
+                                        ),
+                                        title: Text(
+                                          "Subtotal:",
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        subtitle: Text(
+                                          "RS: 10,00",
+                                          style: styleText.myBeautifulTextStyle,
                                         ),
                                       ),
                                     ),
@@ -214,21 +270,45 @@ class _MyVenderState extends State<MyVender> {
                                   flex: 2,
                                   child: Card(
                                     elevation: 10,
-                                    child: ListTile(
-                                      leading: Icon(Icons.attach_money),
-                                      title: Text(
-                                        "Valor pago:",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color.fromARGB(131, 102, 92, 92),
+                                            Color.fromARGB(122, 156, 156, 156)
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
                                       ),
-                                      subtitle: Center(
-                                        child: Flexible(
-                                          child: Text(
-                                            "RS: 10,00",
-                                            style: TextStyle(
-                                                fontSize: 50,
-                                                fontWeight: FontWeight.bold),
+                                      child: ListTile(
+                                        leading: FittedBox(
+                                          fit: BoxFit.cover,
+                                          child: Icon(
+                                            Icons.attach_money,
+                                            color: Colors.white,
+                                            size: 100,
+                                            shadows: [
+                                              Shadow(
+                                                color: Colors.black,
+                                                offset: Offset(2, 2),
+                                                blurRadius: 3,
+                                              ),
+                                            ],
                                           ),
+                                        ),
+                                        title: Text(
+                                          "Valor pago:",
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        subtitle: Text(
+                                          "RS: 10,00",
+                                          style: styleText.myBeautifulTextStyle,
                                         ),
                                       ),
                                     ),
@@ -238,32 +318,63 @@ class _MyVenderState extends State<MyVender> {
                                   flex: 2,
                                   child: Card(
                                     elevation: 10,
-                                    child: ListTile(
-                                      leading: Icon(Icons.attach_money),
-                                      title: Text(
-                                        "Troco:",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color.fromARGB(131, 40, 241, 22),
+                                            Color.fromARGB(132, 13, 192, 22)
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
                                       ),
-                                      subtitle: Center(
-                                        child: Flexible(
-                                          child: Text(
-                                            "RS: 10,00",
-                                            style: TextStyle(
-                                                fontSize: 50,
-                                                fontWeight: FontWeight.bold),
+                                      child: ListTile(
+                                        leading: FittedBox(
+                                          fit: BoxFit.cover,
+                                          child: Icon(
+                                            Icons.attach_money,
+                                            color: Colors.white,
+                                            size: 100,
+                                            shadows: [
+                                              Shadow(
+                                                color: Colors.black,
+                                                offset: Offset(2, 2),
+                                                blurRadius: 3,
+                                              ),
+                                            ],
                                           ),
+                                        ),
+                                        title: Text(
+                                          "Troco:",
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        subtitle: Text(
+                                          "RS: 10,00",
+                                          style: styleText.myBeautifulTextStyle,
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
                                 Flexible(
-                                  flex: 1,
                                   child: Align(
                                     alignment: Alignment.bottomRight,
                                     child: ElevatedButton(
                                         onPressed: () {},
+                                        style: ButtonStyle(
+                                          foregroundColor:
+                                              MaterialStatePropertyAll(
+                                                  Colors.white),
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  Colors.blue),
+                                        ),
                                         child: Text(
                                           "Finalizar",
                                           style: TextStyle(fontSize: 50),
