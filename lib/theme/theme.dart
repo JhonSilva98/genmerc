@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:genmerc/tela/login.dart';
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -11,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
       home: const MyLogin(),
