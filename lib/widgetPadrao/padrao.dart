@@ -16,10 +16,27 @@ class MyWidgetPadrao {
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.black,
             shadows: [
               Shadow(
-                color: Colors.black,
+                color: Colors.white,
+                offset: Offset(2, 2),
+                blurRadius: 3,
+              ),
+            ],
+          ),
+        ),
+      ),
+      DataCell(
+        Text(
+          'marcos',
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            shadows: [
+              Shadow(
+                color: Colors.white,
                 offset: Offset(2, 2),
                 blurRadius: 3,
               ),
@@ -33,10 +50,10 @@ class MyWidgetPadrao {
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.black,
             shadows: [
               Shadow(
-                color: Colors.black,
+                color: Colors.white,
                 offset: Offset(2, 2),
                 blurRadius: 3,
               ),
@@ -50,10 +67,10 @@ class MyWidgetPadrao {
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.black,
             shadows: [
               Shadow(
-                color: Colors.black,
+                color: Colors.white,
                 offset: Offset(2, 2),
                 blurRadius: 3,
               ),
@@ -67,10 +84,10 @@ class MyWidgetPadrao {
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.black,
             shadows: [
               Shadow(
-                color: Colors.black,
+                color: Colors.white,
                 offset: Offset(2, 2),
                 blurRadius: 3,
               ),
@@ -84,27 +101,10 @@ class MyWidgetPadrao {
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.black,
             shadows: [
               Shadow(
-                color: Colors.black,
-                offset: Offset(2, 2),
-                blurRadius: 3,
-              ),
-            ],
-          ),
-        ),
-      ),
-      DataCell(
-        Text(
-          'João',
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            shadows: [
-              Shadow(
-                color: Colors.black,
+                color: Colors.white,
                 offset: Offset(2, 2),
                 blurRadius: 3,
               ),
@@ -118,7 +118,6 @@ class MyWidgetPadrao {
     color: Colors.white, // Cor do texto
     fontSize: 50.0, // Tamanho da fonte
     fontWeight: FontWeight.bold, // Peso da fonte (negrito)
-    fontStyle: FontStyle.italic, // Estilo da fonte (itálico)
     letterSpacing: 1.2, // Espaçamento entre caracteres
     wordSpacing: 2.0, // Espaçamento entre palavras
     shadows: [

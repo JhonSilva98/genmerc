@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genmerc/funcion/addDataTable.dart';
 import 'package:genmerc/widgetPadrao/padrao.dart';
 
 class MyVender extends StatefulWidget {
@@ -10,13 +11,14 @@ class MyVender extends StatefulWidget {
 
 class _MyVenderState extends State<MyVender> {
   MyWidgetPadrao styleText = MyWidgetPadrao();
+  List<DataRow> dataRows = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          color: Color(0XFF5379a9),
+          color: Color.fromARGB(196, 83, 122, 169),
           /*gradient: LinearGradient(
             colors: [
               Color.fromARGB(255, 8, 45, 102),
@@ -35,7 +37,7 @@ class _MyVenderState extends State<MyVender> {
                   children: [
                     Expanded(
                       flex: 3,
-                      child: TextField(
+                      child: TextFormField(
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 30,
@@ -75,7 +77,13 @@ class _MyVenderState extends State<MyVender> {
                           Icons.add_business,
                           color: Colors.white,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          MyAddTABLE tabela = MyAddTABLE();
+                          tabela.adicionarItem();
+                          setState(() {
+                            dataRows.add(tabela.table!);
+                          });
+                        },
                       ),
                     ),
                   ],
@@ -95,80 +103,85 @@ class _MyVenderState extends State<MyVender> {
                         width: MediaQuery.of(context).size.width / 2,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: Color.fromARGB(230, 158, 158, 158)),
+                            color: Colors.white),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            FittedBox(
-                              fit: BoxFit.contain,
+                            Expanded(
                               child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: DataTable(
-                                  columns: [
-                                    DataColumn(
-                                      label: Text(
-                                        'Posição',
-                                        style: TextStyle(
+                                scrollDirection: Axis.vertical,
+                                child: Center(
+                                  child: DataTable(
+                                    columns: [
+                                      DataColumn(
+                                        label: Flexible(
+                                          child: Text(
+                                            'Pos',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0XFF002b51),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      DataColumn(
+                                        label: Text(
+                                          'Cod',
+                                          style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white),
+                                            color: Color(0XFF002b51),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'Codigo',
-                                        style: TextStyle(
+                                      DataColumn(
+                                        label: Text(
+                                          'Nome',
+                                          style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white),
+                                            color: Color(0XFF002b51),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'Nome',
-                                        style: TextStyle(
+                                      DataColumn(
+                                        label: Flexible(
+                                          child: Text(
+                                            'V. Unit.',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0XFF002b51),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      DataColumn(
+                                        label: Text(
+                                          'Qtd',
+                                          style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white),
+                                            color: Color(0XFF002b51),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'Valor Un.',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
+                                      DataColumn(
+                                        label: Flexible(
+                                          child: Text(
+                                            'Total',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0XFF002b51),
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'Quantidade',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'Total',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                  ],
-                                  rows: [
-                                    styleText.myDataRow,
-                                    styleText.myDataRow,
-                                    styleText.myDataRow,
-                                    styleText.myDataRow,
-                                    styleText.myDataRow,
-                                    styleText.myDataRow,
-                                    // Adicione mais linhas conforme necessário
-                                  ],
+                                    ],
+                                    rows: dataRows,
+                                  ),
                                 ),
                               ),
                             ),
@@ -178,25 +191,36 @@ class _MyVenderState extends State<MyVender> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Flexible(
-                                    child: Text(
-                                      "Valor",
-                                      softWrap: false,
-                                      style: TextStyle(
-                                          fontSize: 50,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                                  Expanded(
+                                    child: Card(
+                                      elevation: 10,
+                                      color: Color(0XFF002b51),
+                                      child: Center(
+                                        child: Text(
+                                          "Valor",
+                                          softWrap: false,
+                                          style: TextStyle(
+                                              fontSize: 50,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  Flexible(
-                                    child: Text(
-                                      "10,50",
-                                      softWrap: false,
-                                      style: TextStyle(
-                                          fontSize: 50,
-                                          fontWeight: FontWeight.bold,
-                                          color: const Color.fromARGB(
-                                              255, 248, 31, 16)),
+                                  Expanded(
+                                    child: Card(
+                                      elevation: 10,
+                                      color: Color(0XFF002b51),
+                                      child: Center(
+                                        child: Text(
+                                          "10,50",
+                                          softWrap: false,
+                                          style: TextStyle(
+                                              fontSize: 50,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -224,20 +248,21 @@ class _MyVenderState extends State<MyVender> {
                                     elevation: 10,
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        gradient: LinearGradient(
+                                        color: Color(0XFF002b51),
+                                        /*gradient: LinearGradient(
                                           colors: [
                                             Color.fromARGB(131, 33, 149, 243),
                                             Color.fromARGB(113, 155, 39, 176)
                                           ],
                                           begin: Alignment.topLeft,
                                           end: Alignment.bottomRight,
-                                        ),
+                                        ),*/
                                         borderRadius:
                                             BorderRadius.circular(10.0),
                                       ),
                                       child: ListTile(
                                         leading: FittedBox(
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.scaleDown,
                                           child: Icon(
                                             Icons.attach_money,
                                             color: Colors.white,
@@ -251,16 +276,23 @@ class _MyVenderState extends State<MyVender> {
                                             ],
                                           ),
                                         ),
-                                        title: Text(
-                                          "Subtotal:",
-                                          style: TextStyle(
-                                              fontSize: 30,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
+                                        title: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            "Subtotal:",
+                                            style: TextStyle(
+                                                fontSize: 30,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
-                                        subtitle: Text(
-                                          "RS: 10,00",
-                                          style: styleText.myBeautifulTextStyle,
+                                        subtitle: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            "10,00",
+                                            style:
+                                                styleText.myBeautifulTextStyle,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -272,14 +304,15 @@ class _MyVenderState extends State<MyVender> {
                                     elevation: 10,
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        gradient: LinearGradient(
+                                        color: Color(0XFF002b51),
+                                        /*gradient: LinearGradient(
                                           colors: [
                                             Color.fromARGB(131, 102, 92, 92),
                                             Color.fromARGB(122, 156, 156, 156)
                                           ],
                                           begin: Alignment.topLeft,
                                           end: Alignment.bottomRight,
-                                        ),
+                                        ),*/
                                         borderRadius:
                                             BorderRadius.circular(10.0),
                                       ),
@@ -299,16 +332,51 @@ class _MyVenderState extends State<MyVender> {
                                             ],
                                           ),
                                         ),
-                                        title: Text(
-                                          "Valor pago:",
-                                          style: TextStyle(
-                                              fontSize: 30,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
+                                        title: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            "Valor pago:",
+                                            style: TextStyle(
+                                                fontSize: 30,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
-                                        subtitle: Text(
-                                          "RS: 10,00",
-                                          style: styleText.myBeautifulTextStyle,
+                                        subtitle: Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 100.0, left: 100.0),
+                                          child: TextFormField(
+                                            keyboardType: TextInputType.number,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Colors
+                                                      .white, // Cor da borda branca
+                                                ),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(50.0),
+                                                ),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Colors
+                                                      .white, // Cor da borda branca quando focado
+                                                ),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(8.0),
+                                                ),
+                                              ),
+                                              hintStyle: TextStyle(
+                                                fontSize: 50,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -333,7 +401,7 @@ class _MyVenderState extends State<MyVender> {
                                       ),
                                       child: ListTile(
                                         leading: FittedBox(
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.scaleDown,
                                           child: Icon(
                                             Icons.attach_money,
                                             color: Colors.white,
@@ -347,16 +415,23 @@ class _MyVenderState extends State<MyVender> {
                                             ],
                                           ),
                                         ),
-                                        title: Text(
-                                          "Troco:",
-                                          style: TextStyle(
-                                              fontSize: 30,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
+                                        title: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            "Troco:",
+                                            style: TextStyle(
+                                                fontSize: 30,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
-                                        subtitle: Text(
-                                          "RS: 10,00",
-                                          style: styleText.myBeautifulTextStyle,
+                                        subtitle: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            "10,00",
+                                            style:
+                                                styleText.myBeautifulTextStyle,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -373,7 +448,7 @@ class _MyVenderState extends State<MyVender> {
                                                   Colors.white),
                                           backgroundColor:
                                               MaterialStatePropertyAll(
-                                                  Colors.blue),
+                                                  Colors.blue[900]),
                                         ),
                                         child: Text(
                                           "Finalizar",
