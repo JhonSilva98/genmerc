@@ -19,11 +19,13 @@ class _MyVenderState extends State<MyVender> {
   double troco = 0;
 
   void _onsubmited(PointerDownEvent event) {
-    if (subtotal > 0) {
-      double num = double.tryParse(valorpago.text)!;
-      setState(() {
-        troco = num - subtotal;
-      });
+    if (valorpago.text.isNotEmpty) {
+      if (double.tryParse(valorpago.text)! >= subtotal) {
+        double num = double.tryParse(valorpago.text)!;
+        setState(() {
+          troco = num - subtotal;
+        });
+      }
     }
   }
 
