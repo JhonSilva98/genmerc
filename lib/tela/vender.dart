@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:genmerc/funcion/addDataTable.dart';
 import 'package:genmerc/provider/custom_search_delegate.dart';
 import 'package:genmerc/widgetPadrao/padrao.dart';
@@ -13,20 +14,41 @@ class MyVender extends StatefulWidget {
 class _MyVenderState extends State<MyVender> {
   MyWidgetPadrao styleText = MyWidgetPadrao();
   List<DataRow> dataRowsFinal = [];
+  double subtotal = 0.0;
 
-  double subtotal = 0;
-  TextEditingController valorpago = TextEditingController();
   double troco = 0;
+  double quantidade = 1;
+  double valorUnit = 0;
+  TextEditingController valorpago = TextEditingController(text: '0');
 
   void _onsubmited(PointerDownEvent event) {
     if (valorpago.text.isNotEmpty) {
-      if (double.tryParse(valorpago.text)! >= subtotal) {
-        double num = double.tryParse(valorpago.text)!;
-        setState(() {
-          troco = num - subtotal;
-        });
+      if (double.tryParse(valorpago.text)! == 0 ||
+          double.tryParse(valorpago.text)! >= subtotal) {
+        String num = valorpago.text.replaceAll(',', '.');
+        double numDouble = double.parse(num);
+        double resul = numDouble - subtotal;
+        if (resul >= 0) {
+          setState(() {
+            troco = resul;
+          });
+        } else {
+          setState(() {
+            troco = 0;
+          });
+        }
       }
+    } else {
+      setState(
+        () {
+          troco = 0;
+        },
+      );
     }
+  }
+
+  void updateSearch(String newSearch) {
+    setState(() {});
   }
 
   @override
@@ -39,14 +61,25 @@ class _MyVenderState extends State<MyVender> {
               iconSize: 50.0,
               onPressed: () async {
                 await showSearch(
-                    context: context, delegate: CustomSearchDelegate());
+                    context: context,
+                    delegate: CustomSearchDelegate(
+                      onSearchChanged: updateSearch,
+                    ));
                 MyAddTABLE tabela = MyAddTABLE(
-                    CustomSearchDelegate.fruta, CustomSearchDelegate.valor);
-                tabela.adicionarItem();
-                setState(() {
-                  dataRowsFinal.add(tabela.table!);
-                  subtotal = subtotal + CustomSearchDelegate.valor;
-                });
+                    CustomSearchDelegate.fruta,
+                    CustomSearchDelegate.valor,
+                    CustomSearchDelegate.quantidade,
+                    CustomSearchDelegate.valorUnit);
+                if (CustomSearchDelegate.verificador) {
+                  tabela.adicionarItem();
+
+                  setState(() {
+                    dataRowsFinal.add(tabela.table!);
+                    quantidade = CustomSearchDelegate.quantidade;
+                    subtotal =
+                        subtotal + (CustomSearchDelegate.valor * quantidade);
+                  });
+                }
               },
               icon: Center(
                 child: const Icon(
@@ -314,10 +347,16 @@ class _MyVenderState extends State<MyVender> {
                                           right: 100.0, left: 100.0),
                                       child: TextFormField(
                                         controller: valorpago,
+                                        validator: (value) {},
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp(r'^\d+\.?\d{0,2}$')),
+                                        ],
                                         onTapOutside: _onsubmited,
                                         keyboardType:
                                             TextInputType.numberWithOptions(
-                                                decimal: true),
+                                          decimal: true,
+                                        ),
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 30,

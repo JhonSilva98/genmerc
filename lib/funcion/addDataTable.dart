@@ -4,10 +4,19 @@ class MyAddTABLE {
   DataRow? table;
   final String nome;
   final double valor;
-  MyAddTABLE(this.nome, this.valor);
+  final double quantidade;
+  final double valorUnit;
+  MyAddTABLE(this.nome, this.valor, this.quantidade, this.valorUnit);
 
   void adicionarItem() {
-    List<dynamic> listaInicial = [1, 1231451, nome, 5, 3, valor];
+    List<dynamic> listaInicial = [
+      1,
+      1231451,
+      nome,
+      valorUnit,
+      quantidade,
+      valor
+    ];
     table = DataRow(
       cells: [
         DataCell(Text('${listaInicial[0]}')),
