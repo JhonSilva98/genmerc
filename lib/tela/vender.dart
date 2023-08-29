@@ -19,12 +19,11 @@ class _MyVenderState extends State<MyVender> {
   double troco = 0;
   double quantidade = 1;
   double valorUnit = 0;
-  TextEditingController valorpago = TextEditingController(text: '0');
+  TextEditingController valorpago = TextEditingController(text: '0.0');
 
   void _onsubmited(PointerDownEvent event) {
     if (valorpago.text.isNotEmpty) {
-      if (double.tryParse(valorpago.text)! == 0 ||
-          double.tryParse(valorpago.text)! >= subtotal) {
+      if (double.tryParse(valorpago.text)! >= subtotal) {
         String num = valorpago.text.replaceAll(',', '.');
         double numDouble = double.parse(num);
         double resul = numDouble - subtotal;
@@ -32,16 +31,21 @@ class _MyVenderState extends State<MyVender> {
           setState(() {
             troco = resul;
           });
-        } else {
-          setState(() {
-            troco = 0;
-          });
         }
+      } else {
+        setState(
+          () {
+            valorpago.text = '0.0';
+            troco = 0.0;
+          },
+        );
       }
     } else {
       setState(
         () {
-          troco = 0;
+          valorpago.text = '0.0';
+          troco = 0.0;
+          //troco = subtotal - double.parse(valorpago.text);
         },
       );
     }
@@ -78,6 +82,9 @@ class _MyVenderState extends State<MyVender> {
                     quantidade = CustomSearchDelegate.quantidade;
                     subtotal =
                         subtotal + (CustomSearchDelegate.valor * quantidade);
+                    if (double.parse(valorpago.text) >= subtotal) {
+                      troco = subtotal - double.parse(valorpago.text);
+                    }
                   });
                 }
               },
