@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CustomSearchDelegate extends SearchDelegate<String> {
-  List<String> frutas = [
+  List<String> nomes = [
     'Maçã',
     'Banana',
     'Laranja',
@@ -19,9 +19,9 @@ class CustomSearchDelegate extends SearchDelegate<String> {
 
   CustomSearchDelegate({required this.onSearchChanged});
 
-  static String fruta = "";
+  static String nome = "";
   static double valor = 0;
-  static double quantidade = 1;
+  static double quantidade = 0;
   static double valorUnit = 0;
   static bool verificador = true;
 
@@ -49,15 +49,15 @@ class CustomSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    final filteredFrutas = frutas
-        .where((fruta) => fruta.toLowerCase().contains(query.toLowerCase()))
+    final filterednomes = nomes
+        .where((nome) => nome.toLowerCase().contains(query.toLowerCase()))
         .toList();
 
     return ListView.builder(
-      itemCount: filteredFrutas.length,
+      itemCount: filterednomes.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(filteredFrutas[index]),
+          title: Text(filterednomes[index]),
           onTap: () async {
             TextEditingController _controller =
                 TextEditingController(text: "1");
@@ -88,17 +88,19 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                       child: Text('Salvar'),
                       onPressed: () {
                         verificador = true;
-                        fruta = filteredFrutas[index];
+                        nome = filterednomes[index];
                         valorUnit = numeros[index];
                         if (_controller.text.isNotEmpty) {
                           if (double.tryParse(_controller.text)! <= 0) {
                             quantidade = 1.0;
                             valor = quantidade * valorUnit;
+                            _controller.clear();
                             Navigator.of(context).pop();
                           } else {
                             quantidade =
                                 double.tryParse(_controller.text) ?? 1.0;
                             valor = quantidade * valorUnit;
+                            _controller.clear();
                             Navigator.of(context).pop();
                           }
                         }
@@ -118,15 +120,15 @@ class CustomSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final filteredFrutas = frutas
-        .where((fruta) => fruta.toLowerCase().contains(query.toLowerCase()))
+    final filterednomes = nomes
+        .where((nome) => nome.toLowerCase().contains(query.toLowerCase()))
         .toList();
 
     return ListView.builder(
-      itemCount: filteredFrutas.length,
+      itemCount: filterednomes.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(filteredFrutas[index]),
+          title: Text(filterednomes[index]),
           onTap: () async {
             TextEditingController _controller =
                 TextEditingController(text: "1");
@@ -157,7 +159,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                       child: Text('Salvar'),
                       onPressed: () {
                         verificador = true;
-                        fruta = filteredFrutas[index];
+                        nome = filterednomes[index];
                         valorUnit = numeros[index];
                         if (_controller.text.isNotEmpty) {
                           if (double.tryParse(_controller.text)! <= 0) {

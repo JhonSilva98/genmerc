@@ -2,29 +2,58 @@ import 'package:flutter/material.dart';
 
 class MyAddTABLE {
   DataRow? table;
+
+  static int pos = 0;
   final String nome;
-  final double valor;
+  final double subtotal;
   final double quantidade;
   final double valorUnit;
-  MyAddTABLE(this.nome, this.valor, this.quantidade, this.valorUnit);
+
+  MyAddTABLE(
+    this.nome,
+    this.valorUnit,
+    this.quantidade,
+    this.subtotal,
+  );
 
   void adicionarItem() {
+    pos++;
     List<dynamic> listaInicial = [
-      1,
+      pos,
       1231451,
       nome,
       valorUnit,
       quantidade,
-      valor
+      subtotal
     ];
     table = DataRow(
       cells: [
-        DataCell(Text('${listaInicial[0]}')),
-        DataCell(Text('${listaInicial[1]}')),
-        DataCell(Text('${listaInicial[2]}')),
-        DataCell(Text('${listaInicial[3]}')),
-        DataCell(Text('${listaInicial[4]}')),
-        DataCell(Text('${listaInicial[5]}')),
+        DataCell(
+          Text(
+            '${listaInicial[0]}',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        DataCell(Text(
+          '${listaInicial[1]}',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )),
+        DataCell(Text(
+          '${listaInicial[2]}',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )),
+        DataCell(Text(
+          '${listaInicial[3]}',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )),
+        DataCell(Text(
+          '${listaInicial[4]}',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )),
+        DataCell(Text(
+          '${listaInicial[5]}',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )),
       ],
     );
   }

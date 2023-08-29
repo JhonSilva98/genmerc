@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:genmerc/funcion/addDataTable.dart';
 import 'package:genmerc/provider/custom_search_delegate.dart';
 import 'package:genmerc/widgetPadrao/padrao.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class MyVender extends StatefulWidget {
   const MyVender({super.key});
@@ -17,14 +18,14 @@ class _MyVenderState extends State<MyVender> {
   double subtotal = 0.0;
 
   double troco = 0;
-  double quantidade = 1;
+  double quantidade = 0;
   double valorUnit = 0;
-  TextEditingController valorpago = TextEditingController(text: '0.0');
+  TextEditingController _valorpago = TextEditingController(text: '0.0');
 
   void _onsubmited(PointerDownEvent event) {
-    if (valorpago.text.isNotEmpty) {
-      if (double.tryParse(valorpago.text)! >= subtotal) {
-        String num = valorpago.text.replaceAll(',', '.');
+    if (_valorpago.text.isNotEmpty) {
+      if (double.tryParse(_valorpago.text)! >= subtotal) {
+        String num = _valorpago.text.replaceAll(',', '.');
         double numDouble = double.parse(num);
         double resul = numDouble - subtotal;
         if (resul >= 0) {
@@ -35,7 +36,7 @@ class _MyVenderState extends State<MyVender> {
       } else {
         setState(
           () {
-            valorpago.text = '0.0';
+            _valorpago.text = '0.0';
             troco = 0.0;
           },
         );
@@ -43,9 +44,8 @@ class _MyVenderState extends State<MyVender> {
     } else {
       setState(
         () {
-          valorpago.text = '0.0';
+          _valorpago.text = '0.0';
           troco = 0.0;
-          //troco = subtotal - double.parse(valorpago.text);
         },
       );
     }
@@ -70,20 +70,26 @@ class _MyVenderState extends State<MyVender> {
                       onSearchChanged: updateSearch,
                     ));
                 MyAddTABLE tabela = MyAddTABLE(
-                    CustomSearchDelegate.fruta,
-                    CustomSearchDelegate.valor,
-                    CustomSearchDelegate.quantidade,
-                    CustomSearchDelegate.valorUnit);
+                  CustomSearchDelegate.nome,
+                  CustomSearchDelegate.valorUnit,
+                  CustomSearchDelegate.quantidade,
+                  CustomSearchDelegate.valor,
+                );
                 if (CustomSearchDelegate.verificador) {
                   tabela.adicionarItem();
-
                   setState(() {
                     dataRowsFinal.add(tabela.table!);
                     quantidade = CustomSearchDelegate.quantidade;
-                    subtotal =
-                        subtotal + (CustomSearchDelegate.valor * quantidade);
-                    if (double.parse(valorpago.text) >= subtotal) {
-                      troco = subtotal - double.parse(valorpago.text);
+                    subtotal += CustomSearchDelegate.valor;
+                    if (double.parse(_valorpago.text) >= subtotal) {
+                      setState(() {
+                        troco = double.parse(_valorpago.text) - subtotal;
+                      });
+                    } else {
+                      setState(() {
+                        _valorpago.text = "0.0";
+                        troco = 0.0;
+                      });
                     }
                   });
                 }
@@ -242,36 +248,29 @@ class _MyVenderState extends State<MyVender> {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Container(
                       width: MediaQuery.of(context).size.width / 2,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Card(
-                                elevation: 10,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0XFF002b51),
-                                    /*gradient: LinearGradient(
-                                      colors: [
-                                        Color.fromARGB(131, 33, 149, 243),
-                                        Color.fromARGB(113, 155, 39, 176)
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),*/
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  child: ListTile(
-                                    leading: FittedBox(
-                                      fit: BoxFit.contain,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Card(
+                              elevation: 10,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0XFF002b51),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
                                       child: Icon(
                                         Icons.attach_money,
                                         color: Colors.white,
@@ -285,47 +284,62 @@ class _MyVenderState extends State<MyVender> {
                                         ],
                                       ),
                                     ),
-                                    title: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        "Subtotal:",
-                                        style: TextStyle(
-                                            fontSize: 30,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              "Subtotal:",
+                                              style: TextStyle(
+                                                  fontSize: 30,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              "$subtotal",
+                                              style: styleText
+                                                  .myBeautifulTextStyle,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    subtitle: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        "$subtotal",
-                                        style: styleText.myBeautifulTextStyle,
+                                    Expanded(
+                                      flex: 1,
+                                      child: Opacity(
+                                        opacity: 0.1,
+                                        child: Icon(
+                                          Icons.stairs_rounded,
+                                          size: 100,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             ),
-                            Expanded(
-                              flex: 2,
-                              child: Card(
-                                elevation: 10,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0XFF002b51),
-                                    /*gradient: LinearGradient(
-                                      colors: [
-                                        Color.fromARGB(131, 102, 92, 92),
-                                        Color.fromARGB(122, 156, 156, 156)
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),*/
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  child: ListTile(
-                                    leading: FittedBox(
-                                      fit: BoxFit.contain,
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Card(
+                              elevation: 10,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0XFF002b51),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
                                       child: Icon(
                                         Icons.attach_money,
                                         color: Colors.white,
@@ -339,85 +353,110 @@ class _MyVenderState extends State<MyVender> {
                                         ],
                                       ),
                                     ),
-                                    title: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        "Valor pago:",
-                                        style: TextStyle(
-                                            fontSize: 30,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    subtitle: Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 100.0, left: 100.0),
-                                      child: TextFormField(
-                                        controller: valorpago,
-                                        validator: (value) {},
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp(r'^\d+\.?\d{0,2}$')),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              "Valor Pago:",
+                                              style: TextStyle(
+                                                  fontSize: 30,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: TextFormField(
+                                              controller: _valorpago,
+                                              textAlign: TextAlign.center,
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter
+                                                    .allow(RegExp(
+                                                        r'^\d+\.?\d{0,2}$')),
+                                              ],
+                                              onTapOutside: _onsubmited,
+                                              keyboardType: TextInputType
+                                                  .numberWithOptions(
+                                                decimal: true,
+                                              ),
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 50,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Colors
+                                                        .white, // Cor da borda branca
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(50.0),
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Colors
+                                                        .white, // Cor da borda branca quando focado
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(8.0),
+                                                  ),
+                                                ),
+                                                hintStyle: styleText
+                                                    .myBeautifulTextStyle,
+                                              ),
+                                            ),
+                                          ),
                                         ],
-                                        onTapOutside: _onsubmited,
-                                        keyboardType:
-                                            TextInputType.numberWithOptions(
-                                          decimal: true,
-                                        ),
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors
-                                                  .white, // Cor da borda branca
-                                            ),
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(50.0),
-                                            ),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors
-                                                  .white, // Cor da borda branca quando focado
-                                            ),
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0),
-                                            ),
-                                          ),
-                                          hintStyle: TextStyle(
-                                            fontSize: 50,
-                                            color: Colors.white,
-                                          ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Opacity(
+                                        opacity: 0.1,
+                                        child: Icon(
+                                          Icons.money,
+                                          size: 100,
+                                          color: Colors.grey,
                                         ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             ),
-                            Expanded(
-                              flex: 2,
-                              child: Card(
-                                elevation: 10,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color.fromARGB(131, 40, 241, 22),
-                                        Color.fromARGB(132, 13, 192, 22)
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Card(
+                              elevation: 10,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color.fromARGB(176, 13, 161, 0),
+                                      Color.fromARGB(193, 13, 192, 88)
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
                                   ),
-                                  child: ListTile(
-                                    leading: FittedBox(
-                                      fit: BoxFit.contain,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
                                       child: Icon(
                                         Icons.attach_money,
                                         color: Colors.white,
@@ -431,49 +470,68 @@ class _MyVenderState extends State<MyVender> {
                                         ],
                                       ),
                                     ),
-                                    title: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        "Troco:",
-                                        style: TextStyle(
-                                            fontSize: 30,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              "Troco:",
+                                              style: TextStyle(
+                                                  fontSize: 30,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              "$troco",
+                                              style: styleText
+                                                  .myBeautifulTextStyle,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    subtitle: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        "$troco",
-                                        style: styleText.myBeautifulTextStyle,
+                                    Expanded(
+                                      flex: 1,
+                                      child: Opacity(
+                                        opacity: 0.1,
+                                        child: Icon(
+                                          Icons.expand_circle_down_outlined,
+                                          size: 100,
+                                          color: Colors.black,
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             ),
-                            Flexible(
-                              child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: ElevatedButton(
-                                    onPressed: () {},
-                                    style: ButtonStyle(
-                                      foregroundColor: MaterialStatePropertyAll(
-                                          Colors.white),
-                                      backgroundColor: MaterialStatePropertyAll(
-                                          Colors.blue[900]),
+                          ),
+                          Flexible(
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: ElevatedButton(
+                                  onPressed: () {},
+                                  style: ButtonStyle(
+                                    foregroundColor:
+                                        MaterialStatePropertyAll(Colors.white),
+                                    backgroundColor: MaterialStatePropertyAll(
+                                        Colors.blue[900]),
+                                  ),
+                                  child: FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Text(
+                                      "Finalizar",
+                                      style: TextStyle(fontSize: 50),
                                     ),
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Text(
-                                        "Finalizar",
-                                        style: TextStyle(fontSize: 50),
-                                      ),
-                                    )),
-                              ),
+                                  )),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
