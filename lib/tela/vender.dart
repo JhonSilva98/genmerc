@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:genmerc/funcion/addDataTable.dart';
 import 'package:genmerc/provider/custom_search_delegate.dart';
 import 'package:genmerc/widgetPadrao/padrao.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 
 class MyVender extends StatefulWidget {
   const MyVender({super.key});
@@ -13,13 +12,13 @@ class MyVender extends StatefulWidget {
 }
 
 class _MyVenderState extends State<MyVender> {
-  MyWidgetPadrao styleText = MyWidgetPadrao();
   List<DataRow> dataRowsFinal = [];
-  double subtotal = 0.0;
 
+  double subtotal = 0.0;
   double troco = 0;
   double quantidade = 0;
   double valorUnit = 0;
+
   TextEditingController _valorpago = TextEditingController(text: '0.0');
 
   void _onsubmited(PointerDownEvent event) {
@@ -51,8 +50,25 @@ class _MyVenderState extends State<MyVender> {
     }
   }
 
-  void updateSearch(String newSearch) {
+  void _updateSearch(String newSearch) {
     setState(() {});
+  }
+
+  void funcionClean() {
+    setState(() {
+      dataRowsFinal.clear();
+      MyAddTABLE.pos = 0;
+      CustomSearchDelegate.nome = "";
+      CustomSearchDelegate.valorUnit = 0;
+      CustomSearchDelegate.quantidade = 0;
+      CustomSearchDelegate.subtotal = 0;
+      CustomSearchDelegate.verificador = false;
+      subtotal = 0.0;
+      troco = 0;
+      quantidade = 0;
+      valorUnit = 0;
+      _valorpago.text = '0.0';
+    });
   }
 
   @override
@@ -67,20 +83,20 @@ class _MyVenderState extends State<MyVender> {
                 await showSearch(
                     context: context,
                     delegate: CustomSearchDelegate(
-                      onSearchChanged: updateSearch,
+                      onSearchChanged: _updateSearch,
                     ));
                 MyAddTABLE tabela = MyAddTABLE(
                   CustomSearchDelegate.nome,
                   CustomSearchDelegate.valorUnit,
                   CustomSearchDelegate.quantidade,
-                  CustomSearchDelegate.valor,
+                  CustomSearchDelegate.subtotal,
                 );
                 if (CustomSearchDelegate.verificador) {
                   tabela.adicionarItem();
                   setState(() {
                     dataRowsFinal.add(tabela.table!);
                     quantidade = CustomSearchDelegate.quantidade;
-                    subtotal += CustomSearchDelegate.valor;
+                    subtotal += CustomSearchDelegate.subtotal;
                     if (double.parse(_valorpago.text) >= subtotal) {
                       setState(() {
                         troco = double.parse(_valorpago.text) - subtotal;
@@ -300,11 +316,9 @@ class _MyVenderState extends State<MyVender> {
                                             ),
                                           ),
                                           Expanded(
-                                            child: Text(
-                                              "$subtotal",
-                                              style: styleText
-                                                  .myBeautifulTextStyle,
-                                            ),
+                                            child: Text("$subtotal",
+                                                style: MyWidgetPadrao
+                                                    .myBeautifulTextStyle),
                                           ),
                                         ],
                                       ),
@@ -390,30 +404,29 @@ class _MyVenderState extends State<MyVender> {
                                                 fontWeight: FontWeight.bold,
                                               ),
                                               decoration: InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Colors
-                                                        .white, // Cor da borda branca
+                                                  border: OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: Colors
+                                                          .white, // Cor da borda branca
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(50.0),
+                                                    ),
                                                   ),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(50.0),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: Colors
+                                                          .white, // Cor da borda branca quando focado
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(8.0),
+                                                    ),
                                                   ),
-                                                ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Colors
-                                                        .white, // Cor da borda branca quando focado
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(8.0),
-                                                  ),
-                                                ),
-                                                hintStyle: styleText
-                                                    .myBeautifulTextStyle,
-                                              ),
+                                                  hintStyle: MyWidgetPadrao
+                                                      .myBeautifulTextStyle),
                                             ),
                                           ),
                                         ],
@@ -486,11 +499,9 @@ class _MyVenderState extends State<MyVender> {
                                             ),
                                           ),
                                           Expanded(
-                                            child: Text(
-                                              "$troco",
-                                              style: styleText
-                                                  .myBeautifulTextStyle,
-                                            ),
+                                            child: Text("$troco",
+                                                style: MyWidgetPadrao
+                                                    .myBeautifulTextStyle),
                                           ),
                                         ],
                                       ),
@@ -515,7 +526,7 @@ class _MyVenderState extends State<MyVender> {
                             child: Align(
                               alignment: Alignment.bottomRight,
                               child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () => funcionClean(),
                                   style: ButtonStyle(
                                     foregroundColor:
                                         MaterialStatePropertyAll(Colors.white),
@@ -524,9 +535,20 @@ class _MyVenderState extends State<MyVender> {
                                   ),
                                   child: FittedBox(
                                     fit: BoxFit.contain,
-                                    child: Text(
-                                      "Finalizar",
-                                      style: TextStyle(fontSize: 50),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "Finalizar",
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Opacity(
+                                          opacity: 0.5,
+                                          child: Icon(Icons.check),
+                                        )
+                                      ],
                                     ),
                                   )),
                             ),

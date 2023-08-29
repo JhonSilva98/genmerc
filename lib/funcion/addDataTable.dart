@@ -24,7 +24,7 @@ class MyAddTABLE {
       nome,
       valorUnit,
       quantidade,
-      subtotal
+      subtotal,
     ];
     table = DataRow(
       cells: [
@@ -34,26 +34,36 @@ class MyAddTABLE {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-        DataCell(Text(
-          '${listaInicial[1]}',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        )),
-        DataCell(Text(
-          '${listaInicial[2]}',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        )),
-        DataCell(Text(
-          '${listaInicial[3]}',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        )),
-        DataCell(Text(
-          '${listaInicial[4]}',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        )),
-        DataCell(Text(
-          '${listaInicial[5]}',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        )),
+        DataCell(
+          Text(
+            '${listaInicial[1]}',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        DataCell(
+          Text(
+            '${listaInicial[2]}',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        DataCell(
+          Text(
+            '${listaInicial[3]}',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        DataCell(
+          Text(
+            '${listaInicial[4]}',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        DataCell(
+          Text(
+            '${listaInicial[5]}',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
       ],
     );
   }
