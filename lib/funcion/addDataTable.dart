@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class MyAddTABLE {
-  DataRow? table;
+  DataRow? rows;
 
   static int pos = 0;
+
   final String nome;
   final double subtotal;
   final double quantidade;
@@ -26,7 +27,7 @@ class MyAddTABLE {
       quantidade,
       subtotal,
     ];
-    table = DataRow(
+    rows = DataRow(
       cells: [
         DataCell(
           Text(

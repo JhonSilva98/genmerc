@@ -38,36 +38,6 @@ class CustomSearchDelegate extends SearchDelegate<String> {
   static double valorUnit = 0;
   static bool verificador = true;
 
-  void adicionar(
-    TextEditingController controller,
-    String nomeindex,
-    int pos,
-    context,
-  ) {
-    verificador = true;
-    nome = nomeindex;
-    valorUnit = valores[pos];
-    if (controller.text.isNotEmpty) {
-      if (double.tryParse(controller.text)! <= 0) {
-        quantidade = 1.0;
-        subtotal = quantidade * valorUnit;
-        controller.clear();
-        Navigator.of(context).pop();
-      } else {
-        quantidade = double.tryParse(controller.text) ?? 1.0;
-        subtotal = quantidade * valorUnit;
-        controller.clear();
-        Navigator.of(context).pop();
-      }
-    }
-  }
-
-  void cancelar(context) {
-    verificador = false;
-    Navigator.of(context).pop();
-    onSearchChanged;
-  }
-
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -114,12 +84,23 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                   autofocus: true,
                   onKey: (v) {
                     if (v.logicalKey == LogicalKeyboardKey.enter) {
-                      adicionar(
-                        controller,
-                        filterednomes[index],
-                        nomes.indexOf(filterednomes[index]),
-                        context,
-                      );
+                      verificador = true;
+                      nome = filterednomes[index];
+                      int pos = nomes.indexOf(filterednomes[index]);
+                      valorUnit = valores[pos];
+                      if (controller.text.isNotEmpty) {
+                        if (double.tryParse(controller.text)! <= 0) {
+                          quantidade = 1.0;
+                          subtotal = quantidade * valorUnit;
+                          controller.clear();
+                          Navigator.of(context).pop();
+                        } else {
+                          quantidade = double.tryParse(controller.text) ?? 1.0;
+                          subtotal = quantidade * valorUnit;
+                          controller.clear();
+                          Navigator.of(context).pop();
+                        }
+                      }
                     }
                   },
                   child: AlertDialog(
@@ -131,12 +112,24 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                         TextFormField(
                           controller: controller,
                           onFieldSubmitted: (text) {
-                            adicionar(
-                              controller,
-                              filterednomes[index],
-                              nomes.indexOf(filterednomes[index]),
-                              context,
-                            );
+                            verificador = true;
+                            nome = filterednomes[index];
+                            int pos = nomes.indexOf(filterednomes[index]);
+                            valorUnit = valores[pos];
+                            if (controller.text.isNotEmpty) {
+                              if (double.tryParse(controller.text)! <= 0) {
+                                quantidade = 1.0;
+                                subtotal = quantidade * valorUnit;
+                                controller.clear();
+                                Navigator.of(context).pop();
+                              } else {
+                                quantidade =
+                                    double.tryParse(controller.text) ?? 1.0;
+                                subtotal = quantidade * valorUnit;
+                                controller.clear();
+                                Navigator.of(context).pop();
+                              }
+                            }
                           },
                           textAlign: TextAlign.center,
                           inputFormatters: [
@@ -182,7 +175,9 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                     actions: <Widget>[
                       TextButton(
                         onPressed: () {
-                          cancelar(context);
+                          verificador = false;
+                          Navigator.of(context).pop();
+                          onSearchChanged;
                         },
                         child: Text(
                           'Fechar',
@@ -191,12 +186,24 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          adicionar(
-                            controller,
-                            filterednomes[index],
-                            nomes.indexOf(filterednomes[index]),
-                            context,
-                          );
+                          verificador = true;
+                          nome = filterednomes[index];
+                          int pos = nomes.indexOf(filterednomes[index]);
+                          valorUnit = valores[pos];
+                          if (controller.text.isNotEmpty) {
+                            if (double.tryParse(controller.text)! <= 0) {
+                              quantidade = 1.0;
+                              subtotal = quantidade * valorUnit;
+                              controller.clear();
+                              Navigator.of(context).pop();
+                            } else {
+                              quantidade =
+                                  double.tryParse(controller.text) ?? 1.0;
+                              subtotal = quantidade * valorUnit;
+                              controller.clear();
+                              Navigator.of(context).pop();
+                            }
+                          }
                         },
                         child: Text('Adicionar'),
                       ),
@@ -246,12 +253,23 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                   autofocus: true,
                   onKey: (v) {
                     if (v.logicalKey == LogicalKeyboardKey.enter) {
-                      adicionar(
-                        controller,
-                        filterednomes[index],
-                        nomes.indexOf(filterednomes[index]),
-                        context,
-                      );
+                      verificador = true;
+                      nome = filterednomes[index];
+                      int pos = nomes.indexOf(filterednomes[index]);
+                      valorUnit = valores[pos];
+                      if (controller.text.isNotEmpty) {
+                        if (double.tryParse(controller.text)! <= 0) {
+                          quantidade = 1.0;
+                          subtotal = quantidade * valorUnit;
+                          controller.clear();
+                          Navigator.of(context).pop();
+                        } else {
+                          quantidade = double.tryParse(controller.text) ?? 1.0;
+                          subtotal = quantidade * valorUnit;
+                          controller.clear();
+                          Navigator.of(context).pop();
+                        }
+                      }
                     }
                   },
                   child: AlertDialog(
@@ -263,12 +281,24 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                         TextFormField(
                           controller: controller,
                           onFieldSubmitted: (text) {
-                            adicionar(
-                              controller,
-                              filterednomes[index],
-                              nomes.indexOf(filterednomes[index]),
-                              context,
-                            );
+                            verificador = true;
+                            nome = filterednomes[index];
+                            int pos = nomes.indexOf(filterednomes[index]);
+                            valorUnit = valores[pos];
+                            if (controller.text.isNotEmpty) {
+                              if (double.tryParse(controller.text)! <= 0) {
+                                quantidade = 1.0;
+                                subtotal = quantidade * valorUnit;
+                                controller.clear();
+                                Navigator.of(context).pop();
+                              } else {
+                                quantidade =
+                                    double.tryParse(controller.text) ?? 1.0;
+                                subtotal = quantidade * valorUnit;
+                                controller.clear();
+                                Navigator.of(context).pop();
+                              }
+                            }
                           },
                           textAlign: TextAlign.center,
                           inputFormatters: [
@@ -314,7 +344,9 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                     actions: <Widget>[
                       TextButton(
                         onPressed: () {
-                          cancelar(context);
+                          verificador = false;
+                          Navigator.of(context).pop();
+                          onSearchChanged;
                         },
                         child: Text(
                           'Fechar',
@@ -323,12 +355,24 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          adicionar(
-                            controller,
-                            filterednomes[index],
-                            nomes.indexOf(filterednomes[index]),
-                            context,
-                          );
+                          verificador = true;
+                          nome = filterednomes[index];
+                          int pos = nomes.indexOf(filterednomes[index]);
+                          valorUnit = valores[pos];
+                          if (controller.text.isNotEmpty) {
+                            if (double.tryParse(controller.text)! <= 0) {
+                              quantidade = 1.0;
+                              subtotal = quantidade * valorUnit;
+                              controller.clear();
+                              Navigator.of(context).pop();
+                            } else {
+                              quantidade =
+                                  double.tryParse(controller.text) ?? 1.0;
+                              subtotal = quantidade * valorUnit;
+                              controller.clear();
+                              Navigator.of(context).pop();
+                            }
+                          }
                         },
                         child: Text('Adicionar'),
                       ),

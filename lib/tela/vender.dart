@@ -13,6 +13,7 @@ class MyVender extends StatefulWidget {
 
 class _MyVenderState extends State<MyVender> {
   List<DataRow> dataRowsFinal = [];
+  Map<String, bool> variaveisApagar = {};
 
   double subtotal = 0.0;
   double troco = 0;
@@ -81,10 +82,11 @@ class _MyVenderState extends State<MyVender> {
               iconSize: 50.0,
               onPressed: () async {
                 await showSearch(
-                    context: context,
-                    delegate: CustomSearchDelegate(
-                      onSearchChanged: _updateSearch,
-                    ));
+                  context: context,
+                  delegate: CustomSearchDelegate(
+                    onSearchChanged: _updateSearch,
+                  ),
+                );
                 MyAddTABLE tabela = MyAddTABLE(
                   CustomSearchDelegate.nome,
                   CustomSearchDelegate.valorUnit,
@@ -94,18 +96,22 @@ class _MyVenderState extends State<MyVender> {
                 if (CustomSearchDelegate.verificador) {
                   tabela.adicionarItem();
                   setState(() {
-                    dataRowsFinal.add(tabela.table!);
+                    dataRowsFinal.add(tabela.rows!);
                     quantidade = CustomSearchDelegate.quantidade;
                     subtotal += CustomSearchDelegate.subtotal;
                     if (double.parse(_valorpago.text) >= subtotal) {
-                      setState(() {
-                        troco = double.parse(_valorpago.text) - subtotal;
-                      });
+                      setState(
+                        () {
+                          troco = double.parse(_valorpago.text) - subtotal;
+                        },
+                      );
                     } else {
-                      setState(() {
-                        _valorpago.text = "0.0";
-                        troco = 0.0;
-                      });
+                      setState(
+                        () {
+                          _valorpago.text = "0.0";
+                          troco = 0.0;
+                        },
+                      );
                     }
                   });
                 }
@@ -277,6 +283,7 @@ class _MyVenderState extends State<MyVender> {
                             child: Card(
                               elevation: 10,
                               child: Container(
+                                padding: EdgeInsets.all(8.0),
                                 decoration: BoxDecoration(
                                   color: Color(0XFF002b51),
                                   borderRadius: BorderRadius.circular(10.0),
@@ -344,6 +351,7 @@ class _MyVenderState extends State<MyVender> {
                             child: Card(
                               elevation: 10,
                               child: Container(
+                                padding: EdgeInsets.all(8.0),
                                 decoration: BoxDecoration(
                                   color: Color(0XFF002b51),
                                   borderRadius: BorderRadius.circular(10.0),
@@ -453,6 +461,7 @@ class _MyVenderState extends State<MyVender> {
                             child: Card(
                               elevation: 10,
                               child: Container(
+                                padding: EdgeInsets.all(8.0),
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
@@ -525,32 +534,118 @@ class _MyVenderState extends State<MyVender> {
                           Flexible(
                             child: Align(
                               alignment: Alignment.bottomRight,
-                              child: ElevatedButton(
-                                  onPressed: () => funcionClean(),
-                                  style: ButtonStyle(
-                                    foregroundColor:
-                                        MaterialStatePropertyAll(Colors.white),
-                                    backgroundColor: MaterialStatePropertyAll(
-                                        Colors.blue[900]),
-                                  ),
-                                  child: FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "Finalizar",
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Opacity(
-                                          opacity: 0.5,
-                                          child: Icon(Icons.check),
-                                        )
-                                      ],
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('Selecione'),
+                                            content: Container(
+                                              width: double.maxFinite,
+                                              child: ListView.builder(
+                                                  itemCount:
+                                                      dataRowsFinal.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    return CheckboxListTile(
+                                                      title: Text(""),
+                                                      value: true,
+                                                      onChanged: (bool) {},
+                                                    );
+                                                  }),
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text(
+                                                  'Fechar',
+                                                  style: TextStyle(
+                                                      color: Colors.blue),
+                                                ),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () {},
+                                                child: Text('Apagar'),
+                                              ),
+                                            ],
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                            ),
+                                            elevation: 5,
+                                            backgroundColor: Colors.white,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                              vertical: 10,
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    style: ButtonStyle(
+                                      foregroundColor: MaterialStatePropertyAll(
+                                          Colors.white),
+                                      backgroundColor:
+                                          MaterialStatePropertyAll(Colors.red),
                                     ),
-                                  )),
+                                    child: FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            "Apagar",
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Opacity(
+                                            opacity: 0.5,
+                                            child: Icon(Icons.delete),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () => funcionClean(),
+                                    style: ButtonStyle(
+                                      foregroundColor: MaterialStatePropertyAll(
+                                          Colors.white),
+                                      backgroundColor: MaterialStatePropertyAll(
+                                          Colors.blue[900]),
+                                    ),
+                                    child: FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            "Finalizar",
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Opacity(
+                                            opacity: 0.5,
+                                            child: Icon(Icons.check),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
