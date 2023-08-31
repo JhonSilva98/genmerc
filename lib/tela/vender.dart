@@ -13,7 +13,7 @@ class MyVender extends StatefulWidget {
 
 class _MyVenderState extends State<MyVender> {
   List<DataRow> dataRowsFinal = [];
-  Map<String, bool> variaveisApagar = {};
+  List<List<dynamic>> variaveisApagar = [];
 
   double subtotal = 0.0;
   double troco = 0;
@@ -98,7 +98,8 @@ class _MyVenderState extends State<MyVender> {
                   tabela.adicionarItem();
                   setState(() {
                     dataRowsFinal.add(tabela.rows!);
-                    variaveisApagar[CustomSearchDelegate.nome] = false;
+                    variaveisApagar
+                        .add(["${CustomSearchDelegate.nome}", false]);
                     quantidade = CustomSearchDelegate.quantidade;
                     subtotal += CustomSearchDelegate.subtotal;
                     if (double.parse(_valorpago.text) >= subtotal) {
@@ -559,27 +560,20 @@ class _MyVenderState extends State<MyVender> {
                                                     itemBuilder:
                                                         (BuildContext context,
                                                             int index) {
-                                                      List<String>
-                                                          nomeCheckBox =
-                                                          variaveisApagar.keys
-                                                              .toList();
-                                                      bool value =
-                                                          variaveisApagar[
-                                                              nomeCheckBox[
-                                                                  index]]!;
                                                       return CheckboxListTile(
                                                         title: Text(
-                                                            "${nomeCheckBox[index]}"),
-                                                        value: value,
+                                                            "${variaveisApagar[index][0]}"),
+                                                        value: variaveisApagar[
+                                                            index][1]!,
                                                         onChanged: (bool) {
                                                           setState(() {
                                                             variaveisApagar[
-                                                                    nomeCheckBox[
-                                                                        index]] =
+                                                                    index][1] =
                                                                 bool!;
-                                                            print(variaveisApagar[
-                                                                nomeCheckBox[
-                                                                    index]]);
+                                                            print(
+                                                              variaveisApagar[
+                                                                  index][1],
+                                                            );
                                                           });
                                                         },
                                                       );
@@ -598,7 +592,9 @@ class _MyVenderState extends State<MyVender> {
                                                 ),
                                               ),
                                               ElevatedButton(
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  setState(() {});
+                                                },
                                                 child: Text('Apagar'),
                                               ),
                                             ],
