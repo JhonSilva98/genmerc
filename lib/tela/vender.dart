@@ -98,8 +98,11 @@ class _MyVenderState extends State<MyVender> {
                   tabela.adicionarItem();
                   setState(() {
                     dataRowsFinal.add(tabela.rows!);
-                    variaveisApagar
-                        .add(["${CustomSearchDelegate.nome}", false]);
+                    variaveisApagar.add([
+                      "${CustomSearchDelegate.nome}",
+                      false,
+                      CustomSearchDelegate.subtotal
+                    ]);
                     quantidade = CustomSearchDelegate.quantidade;
                     subtotal += CustomSearchDelegate.subtotal;
                     if (double.parse(_valorpago.text) >= subtotal) {
@@ -570,10 +573,6 @@ class _MyVenderState extends State<MyVender> {
                                                             variaveisApagar[
                                                                     index][1] =
                                                                 bool!;
-                                                            print(
-                                                              variaveisApagar[
-                                                                  index][1],
-                                                            );
                                                           });
                                                         },
                                                       );
@@ -593,7 +592,35 @@ class _MyVenderState extends State<MyVender> {
                                               ),
                                               ElevatedButton(
                                                 onPressed: () {
-                                                  setState(() {});
+                                                  setState(
+                                                    () {
+                                                      List<int>
+                                                          indicesToRemove = [];
+                                                      for (var number
+                                                          in variaveisApagar) {
+                                                        if (number[1] == true) {
+                                                          indicesToRemove.add(
+                                                              variaveisApagar
+                                                                  .indexOf(
+                                                                      number));
+                                                        }
+                                                      }
+
+                                                      for (var index
+                                                          in indicesToRemove
+                                                              .reversed) {
+                                                        subtotal -=
+                                                            variaveisApagar[
+                                                                index][2];
+                                                        dataRowsFinal
+                                                            .removeAt(index);
+                                                        variaveisApagar
+                                                            .removeAt(index);
+                                                      }
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  );
                                                 },
                                                 child: Text('Apagar'),
                                               ),
