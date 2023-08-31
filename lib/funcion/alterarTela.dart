@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genmerc/tela/telaTest.dart';
 import 'package:genmerc/tela/vender.dart';
 
 class ContentDisplayWidget extends StatelessWidget {
@@ -12,7 +13,7 @@ class ContentDisplayWidget extends StatelessWidget {
       case 0:
         return MyVender(); // Exiba o widget da outra classe aqui
       case 1:
-        return Text('Conteúdo do item 2');
+        return Teste();
       case 2:
         return Text('Conteúdo do item 3');
       default:
