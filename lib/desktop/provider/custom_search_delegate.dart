@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:genmerc/widgetPadrao/padrao.dart';
+import 'package:genmerc/desktop/widgetPadrao/padrao.dart';
 
 class CustomSearchDelegate extends SearchDelegate<String> {
   List<String> nomes = [
@@ -32,10 +32,10 @@ class CustomSearchDelegate extends SearchDelegate<String> {
 
   CustomSearchDelegate({required this.onSearchChanged});
 
-  static String nome = "";
+  static String nome = ""; // nome variavel
   static double subtotal = 0;
   static double quantidade = 0;
-  static double valorUnit = 0;
+  static double valorUnit = 0; // valor unidade
   static bool verificador = true;
 
   void adicionar(
@@ -225,7 +225,11 @@ class CustomSearchDelegate extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     final filterednomes = nomes
-        .where((nome) => nome.toLowerCase().contains(query.toLowerCase()))
+        .where(
+          (nome) => nome.toLowerCase().contains(
+                query.toLowerCase(),
+              ),
+        )
         .toList();
 
     return ListView.builder(

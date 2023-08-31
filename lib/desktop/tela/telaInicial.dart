@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:genmerc/funcion/alterarTela.dart';
+import 'package:genmerc/desktop/tela/alterarTela.dart';
 
 class MyTelaInicial extends StatefulWidget {
   const MyTelaInicial({super.key});

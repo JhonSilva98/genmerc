@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:genmerc/tela/telaTest.dart';
-import 'package:genmerc/tela/vender.dart';
+import 'package:genmerc/desktop/tela/telaTest.dart';
+import 'package:genmerc/desktop/tela/vender.dart';
 
 class ContentDisplayWidget extends StatelessWidget {
   final int selectedIndex;

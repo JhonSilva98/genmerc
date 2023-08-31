@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:genmerc/tela/login.dart';
+import 'package:genmerc/desktop/tela/login.dart';
+import 'package:genmerc/mobile/tela/barcodeLeitor.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
-      home: const MyLogin(),
+      home: BarCodeMobile(), //const MyLogin(),
     );
   }
 }

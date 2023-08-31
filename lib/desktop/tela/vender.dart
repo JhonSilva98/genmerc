@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:genmerc/funcion/addDataTable.dart';
-import 'package:genmerc/provider/custom_search_delegate.dart';
-import 'package:genmerc/widgetPadrao/padrao.dart';
+import 'package:genmerc/desktop/provider/custom_search_delegate.dart';
+import 'package:genmerc/desktop/widgetPadrao/padrao.dart';
 
 class MyVender extends StatefulWidget {
   const MyVender({super.key});

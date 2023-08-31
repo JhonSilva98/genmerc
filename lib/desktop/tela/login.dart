@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:genmerc/tela/telaInicial.dart';
+import 'package:genmerc/desktop/tela/telaInicial.dart';
 
 class MyLogin extends StatefulWidget {
   const MyLogin({super.key});
