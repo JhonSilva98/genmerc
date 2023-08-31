@@ -69,6 +69,7 @@ class _MyVenderState extends State<MyVender> {
       quantidade = 0;
       valorUnit = 0;
       _valorpago.text = '0.0';
+      variaveisApagar.clear();
     });
   }
 
@@ -97,6 +98,7 @@ class _MyVenderState extends State<MyVender> {
                   tabela.adicionarItem();
                   setState(() {
                     dataRowsFinal.add(tabela.rows!);
+                    variaveisApagar[CustomSearchDelegate.nome] = false;
                     quantidade = CustomSearchDelegate.quantidade;
                     subtotal += CustomSearchDelegate.subtotal;
                     if (double.parse(_valorpago.text) >= subtotal) {
@@ -546,21 +548,44 @@ class _MyVenderState extends State<MyVender> {
                                         builder: (BuildContext context) {
                                           return AlertDialog(
                                             title: Text('Selecione'),
-                                            content: Container(
-                                              width: double.maxFinite,
-                                              child: ListView.builder(
-                                                  itemCount:
-                                                      dataRowsFinal.length,
-                                                  itemBuilder:
-                                                      (BuildContext context,
-                                                          int index) {
-                                                    return CheckboxListTile(
-                                                      title: Text(""),
-                                                      value: true,
-                                                      onChanged: (bool) {},
-                                                    );
-                                                  }),
-                                            ),
+                                            content: StatefulBuilder(builder:
+                                                (BuildContext context,
+                                                    StateSetter setState) {
+                                              return Container(
+                                                width: double.maxFinite,
+                                                child: ListView.builder(
+                                                    itemCount:
+                                                        variaveisApagar.length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      List<String>
+                                                          nomeCheckBox =
+                                                          variaveisApagar.keys
+                                                              .toList();
+                                                      bool value =
+                                                          variaveisApagar[
+                                                              nomeCheckBox[
+                                                                  index]]!;
+                                                      return CheckboxListTile(
+                                                        title: Text(
+                                                            "${nomeCheckBox[index]}"),
+                                                        value: value,
+                                                        onChanged: (bool) {
+                                                          setState(() {
+                                                            variaveisApagar[
+                                                                    nomeCheckBox[
+                                                                        index]] =
+                                                                bool!;
+                                                            print(variaveisApagar[
+                                                                nomeCheckBox[
+                                                                    index]]);
+                                                          });
+                                                        },
+                                                      );
+                                                    }),
+                                              );
+                                            }),
                                             actions: <Widget>[
                                               TextButton(
                                                 onPressed: () {
