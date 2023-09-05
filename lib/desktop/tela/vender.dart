@@ -1,3 +1,5 @@
+import 'package:firedart/firedart.dart';
+import 'package:firedart/firestore/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:genmerc/funcion/addDataTable.dart';
@@ -21,6 +23,7 @@ class _MyVenderState extends State<MyVender> {
   double valorUnit = 0;
 
   TextEditingController _valorpago = TextEditingController(text: '0.0');
+  CollectionReference ref = Firestore.instance.collection('produtos');
 
   void _onsubmited(PointerDownEvent event) {
     if (_valorpago.text.isNotEmpty) {
@@ -655,7 +658,25 @@ class _MyVenderState extends State<MyVender> {
                                     ),
                                   ),
                                   ElevatedButton(
-                                    onPressed: () => funcionClean(),
+                                    onPressed: () async {
+                                      List<String> listaDocument = [];
+                                      var document = await ref.get();
+                                      for (var doc in document) {
+                                        // Use uma expressão regular para encontrar o número
+                                        RegExp regex = RegExp(r'(\d+)');
+                                        Match? match =
+                                            regex.firstMatch(doc.toString());
+                                        if (match != null) {
+                                          String numero = match.group(0)!;
+                                          print(numero);
+                                        } else {
+                                          print(
+                                              "Número não encontrado na string.");
+                                        }
+                                      }
+
+                                      funcionClean();
+                                    },
                                     style: ButtonStyle(
                                       foregroundColor: MaterialStatePropertyAll(
                                           Colors.white),
