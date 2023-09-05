@@ -41,6 +41,11 @@ class _MyTelaInicialState extends State<MyTelaInicial> {
               selectedIcon: Icon(Icons.edit_document),
               label: Text('Editar'),
             ),
+            NavigationRailDestination(
+              icon: Icon(Icons.account_balance_wallet),
+              selectedIcon: Icon(Icons.account_balance_wallet_outlined),
+              label: Text('Fiado'),
+            ),
           ],
         ),
         const VerticalDivider(thickness: 1, width: 1),

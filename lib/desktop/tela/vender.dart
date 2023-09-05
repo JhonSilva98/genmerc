@@ -58,7 +58,6 @@ class _MyVenderState extends State<MyVender> {
   void funcionClean() {
     setState(() {
       dataRowsFinal.clear();
-      MyAddTABLE.pos = 0;
       CustomSearchDelegate.nome = "";
       CustomSearchDelegate.valorUnit = 0;
       CustomSearchDelegate.quantidade = 0;
@@ -158,16 +157,6 @@ class _MyVenderState extends State<MyVender> {
                               fit: BoxFit.contain,
                               child: DataTable(
                                 columns: [
-                                  DataColumn(
-                                    label: Text(
-                                      'Pos',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0XFF002b51),
-                                      ),
-                                    ),
-                                  ),
                                   DataColumn(
                                     label: Text(
                                       'Cod',

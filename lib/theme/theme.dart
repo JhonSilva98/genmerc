@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
-      home: BarCodeMobile(), //const MyLogin(),
+      home: const MyLogin(), //BarCodeMobile(),
     );
   }
 }

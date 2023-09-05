@@ -16,6 +16,8 @@ class ContentDisplayWidget extends StatelessWidget {
         return Teste();
       case 2:
         return Text('Conteúdo do item 3');
+      case 3:
+        return Text('Fiado');
       default:
         return Text('Conteúdo desconhecido');
     }
