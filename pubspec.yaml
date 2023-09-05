@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   openfoodfacts: ^2.10.1
   flutter_barcode_scanner: ^2.0.0
+  firedart: ^0.9.7
 
 dev_dependencies:
   flutter_test:
