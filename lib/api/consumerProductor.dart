@@ -9,7 +9,7 @@ class MyGetProductor {
 
     final ProductQueryConfiguration configuration = ProductQueryConfiguration(
       barcode,
-      language: OpenFoodFactsLanguage.GERMAN,
+      language: OpenFoodFactsLanguage.PORTUGUESE,
       fields: [ProductField.ALL],
       version: ProductQueryVersion.v3,
     );
@@ -19,7 +19,8 @@ class MyGetProductor {
     if (result.status == ProductResultV3.statusSuccess) {
       return result.product;
     } else {
-      throw Exception('product not found, please insert data for $barcode');
+      print('product not found, please insert data for $barcode');
+      return null;
     }
   }
 

@@ -1,8 +1,5 @@
-import 'package:firedart/firedart.dart';
-import 'package:firedart/firestore/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:genmerc/api/consumerProductor.dart';
 import 'package:genmerc/funcion/addDataTable.dart';
 import 'package:genmerc/desktop/provider/custom_search_delegate.dart';
 import 'package:genmerc/desktop/widgetPadrao/padrao.dart';
@@ -99,29 +96,33 @@ class _MyVenderState extends State<MyVender> {
                 );
                 if (CustomSearchDelegate.verificador) {
                   tabela.adicionarItem();
-                  setState(() {
-                    variaveisApagar.add([
-                      "${CustomSearchDelegate.nome}",
-                      false,
-                      CustomSearchDelegate.subtotal
-                    ]);
-                    quantidade = CustomSearchDelegate.quantidade;
-                    subtotal += CustomSearchDelegate.subtotal;
-                    if (double.parse(_valorpago.text) >= subtotal) {
-                      setState(
-                        () {
-                          troco = double.parse(_valorpago.text) - subtotal;
-                        },
-                      );
-                    } else {
-                      setState(
-                        () {
-                          _valorpago.text = "0.0";
-                          troco = 0.0;
-                        },
-                      );
-                    }
-                  });
+                  setState(
+                    () {
+                      tabela.adicionarItem();
+                      dataRowsFinal.add(tabela.rows!);
+                      variaveisApagar.add([
+                        "${CustomSearchDelegate.nome}",
+                        false,
+                        CustomSearchDelegate.subtotal
+                      ]);
+                      quantidade = CustomSearchDelegate.quantidade;
+                      subtotal += CustomSearchDelegate.subtotal;
+                      if (double.parse(_valorpago.text) >= subtotal) {
+                        setState(
+                          () {
+                            troco = double.parse(_valorpago.text) - subtotal;
+                          },
+                        );
+                      } else {
+                        setState(
+                          () {
+                            _valorpago.text = "0.0";
+                            troco = 0.0;
+                          },
+                        );
+                      }
+                    },
+                  );
                 }
               },
               icon: Center(
@@ -659,17 +660,15 @@ class _MyVenderState extends State<MyVender> {
                                   ),
                                   ElevatedButton(
                                     onPressed: () async {
-                                      BdFiredart dados = BdFiredart(
-                                          onSearchChanged: _updateSearch);
-                                      await dados
-                                          .addBancoFiredart('7894321722016');
+                                      BdFiredart dados = BdFiredart();
+                                      await dados.addBancoFiredart(
+                                          '7894321722016', context);
                                       MyAddTABLE tabela = MyAddTABLE(
                                         dados.nome,
                                         dados.valorUnit,
                                         dados.quantidade,
                                         dados.subtotal,
                                       );
-                                      print(dados.verificador);
                                       if (dados.verificador) {
                                         tabela.adicionarItem();
                                         setState(() {

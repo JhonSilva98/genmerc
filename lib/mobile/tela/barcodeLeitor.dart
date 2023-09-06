@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:genmerc/funcion/bancodedados.dart';
 
 class BarCodeMobile extends StatefulWidget {
   const BarCodeMobile({super.key});
@@ -12,10 +13,20 @@ class BarCodeMobile extends StatefulWidget {
 class _BarCodeMobileState extends State<BarCodeMobile> {
   String _scanBarcode = 'Unknown';
 
+  Future<void> executarFuncaoBarcode(
+    String cod,
+  ) async {
+    BdFiredart dados = BdFiredart();
+    await dados.addBancoFiredart(cod, context);
+  }
+
   Future<void> startBarcodeScanStream() async {
     FlutterBarcodeScanner.getBarcodeStreamReceiver(
             '#ff6666', 'Cancel', true, ScanMode.BARCODE)!
-        .listen((barcode) => print(barcode));
+        .listen((barcode) async {
+      await executarFuncaoBarcode('7894321722016');
+      print(barcode);
+    });
   }
 
   Future<void> scanQR() async {
@@ -24,6 +35,7 @@ class _BarCodeMobileState extends State<BarCodeMobile> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
+      await executarFuncaoBarcode(barcodeScanRes);
       print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
@@ -46,6 +58,7 @@ class _BarCodeMobileState extends State<BarCodeMobile> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      await executarFuncaoBarcode('7894321722016');
       print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';

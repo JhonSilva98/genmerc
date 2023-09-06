@@ -1,5 +1,8 @@
 import 'package:firedart/firedart.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:genmerc/api/consumerProductor.dart';
+import 'package:genmerc/desktop/widgetPadrao/padrao.dart';
 
 class BdFiredart {
   String nome = ""; // nome variavel
@@ -7,9 +10,6 @@ class BdFiredart {
   double quantidade = 0;
   double valorUnit = 0; // valor unidade
   bool verificador = false;
-  final Function(String) onSearchChanged;
-
-  BdFiredart({required this.onSearchChanged});
 
   void adicionar(
     String nomeindex,
@@ -22,7 +22,8 @@ class BdFiredart {
     subtotal = quantidade * valorUnit;
   }
 
-  Future<void> addBancoFiredart(String cod) async {
+  Future<void> addBancoFiredart(String cod, context) async {
+//aqui vai pegar os nomes dos documentos
     CollectionReference ref = Firestore.instance.collection('produtos');
     String teste = cod;
     List<String> listaDocument = [];
@@ -39,35 +40,260 @@ class BdFiredart {
         print("Número não encontrado na string.");
       }
     }
+//aqui vai fazer as verificaçoes se existe ou dados na API
+    MyGetProductor getProdutosAPI = MyGetProductor();
     if (listaDocument.isNotEmpty) {
-      MyGetProductor getProdutosAPI = MyGetProductor();
+      var produto = await getProdutosAPI.getProduct(teste);
       if (listaDocument.contains(teste)) {
-        var produto = await getProdutosAPI.getProduct(teste);
+        print('Contem na lista');
         if (produto != null) {
           String productName =
               produto.productName ?? "Product name not available";
           var document = await ref.document(teste).get();
-          int numberConvert = document['valorUnit'];
+          var numberConvert = document['valorUnit'];
           double numm = numberConvert.toDouble();
           adicionar(productName, numm);
-          onSearchChanged;
           print('${nome} ,${subtotal}, ${quantidade}, ${valorUnit}');
           //print("Product Name: $valor");
         } else {
           print("Product not found.");
         }
+      } else if (produto == null) {
+        print('NÃO TEM NEM NOME NEM NADA');
+        double valorUnitario = 1;
+        String nameProduto = "";
+        TextEditingController controllerNome = TextEditingController();
+        TextEditingController controllervalor = TextEditingController(
+          text: "1",
+        );
+        await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Adicione'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextFormField(
+                    controller: controllerNome,
+                    onFieldSubmitted: (text) {
+                      nameProduto = controllerNome.text;
+                    },
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.name,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white, // Cor da borda branca
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(50.0),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors
+                                .white, // Cor da borda branca quando focado
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8.0),
+                          ),
+                        ),
+                        hintStyle: MyWidgetPadrao.myBeautifulTextStyleBlack),
+                  ),
+                  TextFormField(
+                    controller: controllervalor,
+                    onFieldSubmitted: (text) {
+                      valorUnitario = double.tryParse(controllervalor.text)!;
+                    },
+                    textAlign: TextAlign.center,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d+\.?\d{0,2}$')),
+                    ],
+                    keyboardType: TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white, // Cor da borda branca
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(50.0),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors
+                                .white, // Cor da borda branca quando focado
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8.0),
+                          ),
+                        ),
+                        hintStyle: MyWidgetPadrao.myBeautifulTextStyleBlack),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Adicione a quantidade!',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Fechar',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    nameProduto = controllerNome.text;
+                    valorUnitario = double.parse(controllervalor.text);
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Adicionar'),
+                ),
+              ],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              elevation: 5,
+              backgroundColor: Colors.white,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 10,
+              ),
+            );
+          },
+        );
+        ref
+            .document(teste)
+            .create({'nome': nameProduto, 'valorUnit': valorUnitario});
+        var document = await ref.document(teste).get();
+        int numberConvert = document['valorUnit'];
+        double numm = numberConvert.toDouble();
+        adicionar(nameProduto, numm);
+        print('${nome} ,${subtotal}, ${quantidade}, ${valorUnit}');
       } else {
+        print('não Contem na lista mas existe');
         var produto = await getProdutosAPI.getProduct(teste);
         if (produto != null) {
           String productName =
               produto.productName ?? "Product name not available";
-
-          ref.document(teste).create({'nome': productName, 'valorUnit': 5});
+          double valorUnitario = 1;
+          TextEditingController controller = TextEditingController(
+            text: "1",
+          );
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Adicione'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      controller: controller,
+                      onFieldSubmitted: (text) {
+                        valorUnitario = double.tryParse(controller.text)!;
+                      },
+                      textAlign: TextAlign.center,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d+\.?\d{0,2}$')),
+                      ],
+                      keyboardType: TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white, // Cor da borda branca
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(50.0),
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors
+                                  .white, // Cor da borda branca quando focado
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                          ),
+                          hintStyle: MyWidgetPadrao.myBeautifulTextStyleBlack),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Adicione a quantidade!',
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Fechar',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      valorUnitario = double.tryParse(controller.text)!;
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Adicionar'),
+                  ),
+                ],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                elevation: 5,
+                backgroundColor: Colors.white,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+              );
+            },
+          );
+          ref
+              .document(teste)
+              .create({'nome': productName, 'valorUnit': valorUnitario});
           var document = await ref.document(teste).get();
           int numberConvert = document['valorUnit'];
           double numm = numberConvert.toDouble();
           adicionar(productName, numm);
-          onSearchChanged;
           print('${nome} ,${subtotal}, ${quantidade}, ${valorUnit}');
         } else {
           print("Product not found.");
