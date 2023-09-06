@@ -2,9 +2,11 @@ import 'package:firedart/firedart.dart';
 import 'package:firedart/firestore/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:genmerc/api/consumerProductor.dart';
 import 'package:genmerc/funcion/addDataTable.dart';
 import 'package:genmerc/desktop/provider/custom_search_delegate.dart';
 import 'package:genmerc/desktop/widgetPadrao/padrao.dart';
+import 'package:genmerc/funcion/bancodedados.dart';
 
 class MyVender extends StatefulWidget {
   const MyVender({super.key});
@@ -23,7 +25,6 @@ class _MyVenderState extends State<MyVender> {
   double valorUnit = 0;
 
   TextEditingController _valorpago = TextEditingController(text: '0.0');
-  CollectionReference ref = Firestore.instance.collection('produtos');
 
   void _onsubmited(PointerDownEvent event) {
     if (_valorpago.text.isNotEmpty) {
@@ -99,7 +100,6 @@ class _MyVenderState extends State<MyVender> {
                 if (CustomSearchDelegate.verificador) {
                   tabela.adicionarItem();
                   setState(() {
-                    dataRowsFinal.add(tabela.rows!);
                     variaveisApagar.add([
                       "${CustomSearchDelegate.nome}",
                       false,
@@ -659,23 +659,48 @@ class _MyVenderState extends State<MyVender> {
                                   ),
                                   ElevatedButton(
                                     onPressed: () async {
-                                      List<String> listaDocument = [];
-                                      var document = await ref.get();
-                                      for (var doc in document) {
-                                        // Use uma expressão regular para encontrar o número
-                                        RegExp regex = RegExp(r'(\d+)');
-                                        Match? match =
-                                            regex.firstMatch(doc.toString());
-                                        if (match != null) {
-                                          String numero = match.group(0)!;
-                                          print(numero);
-                                        } else {
-                                          print(
-                                              "Número não encontrado na string.");
-                                        }
+                                      BdFiredart dados = BdFiredart(
+                                          onSearchChanged: _updateSearch);
+                                      await dados
+                                          .addBancoFiredart('7894321722016');
+                                      MyAddTABLE tabela = MyAddTABLE(
+                                        dados.nome,
+                                        dados.valorUnit,
+                                        dados.quantidade,
+                                        dados.subtotal,
+                                      );
+                                      print(dados.verificador);
+                                      if (dados.verificador) {
+                                        tabela.adicionarItem();
+                                        setState(() {
+                                          dataRowsFinal.add(tabela.rows!);
+                                          variaveisApagar.add([
+                                            "${dados.nome}",
+                                            false,
+                                            dados.subtotal
+                                          ]);
+                                          quantidade = dados.quantidade;
+                                          subtotal += dados.subtotal;
+                                          if (double.parse(_valorpago.text) >=
+                                              subtotal) {
+                                            setState(
+                                              () {
+                                                troco = double.parse(
+                                                        _valorpago.text) -
+                                                    subtotal;
+                                              },
+                                            );
+                                          } else {
+                                            setState(
+                                              () {
+                                                _valorpago.text = "0.0";
+                                                troco = 0.0;
+                                              },
+                                            );
+                                          }
+                                        });
                                       }
-
-                                      funcionClean();
+                                      //funcionClean();
                                     },
                                     style: ButtonStyle(
                                       foregroundColor: MaterialStatePropertyAll(
