@@ -1,3 +1,4 @@
+import 'package:firedart/firedart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:genmerc/funcion/addDataTable.dart';
@@ -13,6 +14,7 @@ class MyVender extends StatefulWidget {
 }
 
 class _MyVenderState extends State<MyVender> {
+  BdFiredart bancoDart = BdFiredart();
   List<DataRow> dataRowsFinal = [];
   List<List<dynamic>> variaveisApagar = [];
 
@@ -73,6 +75,57 @@ class _MyVenderState extends State<MyVender> {
     });
   }
 
+  Future<void> funcionAttVendas() async {
+    CollectionReference ref = Firestore.instance.collection('venda');
+    BdFiredart dados = BdFiredart();
+    List<String> ids = await bancoDart.getListidDocumentsVenda();
+
+    for (var id in ids) {
+      if (await ref.document(id).exists) {
+        var document = await ref.document(id).get();
+        String nomeDoc = document['nome'];
+        var numberConvert = document['valorUnit'];
+        double numm = numberConvert.toDouble();
+        dados.adicionar(nomeDoc, numm);
+        MyAddTABLE tabela = MyAddTABLE(
+          dados.nome,
+          dados.valorUnit,
+          dados.quantidade,
+          double.parse(dados.subtotal.toStringAsFixed(2)),
+          id,
+        );
+        tabela.adicionarItem();
+        setState(
+          () {
+            dataRowsFinal.add(tabela.rows!);
+            variaveisApagar.add([
+              "${nomeDoc}",
+              false,
+              double.parse(dados.subtotal.toStringAsFixed(2)),
+            ]);
+            quantidade = dados.quantidade;
+            subtotal += double.parse(dados.subtotal.toStringAsFixed(2));
+            if (double.parse(_valorpago.text) >= subtotal) {
+              setState(
+                () {
+                  troco = double.parse(_valorpago.text) -
+                      double.parse(dados.subtotal.toStringAsFixed(2));
+                },
+              );
+            } else {
+              setState(
+                () {
+                  _valorpago.text = "0.0";
+                  troco = 0.0;
+                },
+              );
+            }
+          },
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,11 +142,12 @@ class _MyVenderState extends State<MyVender> {
                   ),
                 );
                 MyAddTABLE tabela = MyAddTABLE(
-                  CustomSearchDelegate.nome,
-                  CustomSearchDelegate.valorUnit,
-                  CustomSearchDelegate.quantidade,
-                  CustomSearchDelegate.subtotal,
-                );
+                    CustomSearchDelegate.nome,
+                    CustomSearchDelegate.valorUnit,
+                    CustomSearchDelegate.quantidade,
+                    double.parse(
+                        CustomSearchDelegate.subtotal.toStringAsFixed(2)),
+                    '11111');
                 if (CustomSearchDelegate.verificador) {
                   tabela.adicionarItem();
                   setState(
@@ -103,14 +157,18 @@ class _MyVenderState extends State<MyVender> {
                       variaveisApagar.add([
                         "${CustomSearchDelegate.nome}",
                         false,
-                        CustomSearchDelegate.subtotal
+                        double.parse(
+                            CustomSearchDelegate.subtotal.toStringAsFixed(2))
                       ]);
                       quantidade = CustomSearchDelegate.quantidade;
-                      subtotal += CustomSearchDelegate.subtotal;
+                      subtotal += double.parse(
+                          CustomSearchDelegate.subtotal.toStringAsFixed(2));
                       if (double.parse(_valorpago.text) >= subtotal) {
                         setState(
                           () {
-                            troco = double.parse(_valorpago.text) - subtotal;
+                            troco = double.parse(_valorpago.text) -
+                                double.parse(CustomSearchDelegate.subtotal
+                                    .toStringAsFixed(2));
                           },
                         );
                       } else {
@@ -249,7 +307,7 @@ class _MyVenderState extends State<MyVender> {
                                     child: FittedBox(
                                       fit: BoxFit.contain,
                                       child: Text(
-                                        "$subtotal",
+                                        "${double.parse(subtotal.toStringAsFixed(2))}",
                                         softWrap: false,
                                         style: TextStyle(
                                             fontSize: 50,
@@ -322,7 +380,8 @@ class _MyVenderState extends State<MyVender> {
                                             ),
                                           ),
                                           Expanded(
-                                            child: Text("$subtotal",
+                                            child: Text(
+                                                "${double.parse(subtotal.toStringAsFixed(2))}",
                                                 style: MyWidgetPadrao
                                                     .myBeautifulTextStyle),
                                           ),
@@ -602,9 +661,12 @@ class _MyVenderState extends State<MyVender> {
                                                       for (var index
                                                           in indicesToRemove
                                                               .reversed) {
-                                                        subtotal -=
+                                                        subtotal -= double.parse(
                                                             variaveisApagar[
-                                                                index][2];
+                                                                    index][2]
+                                                                .toStringAsFixed(
+                                                                    2));
+
                                                         dataRowsFinal
                                                             .removeAt(index);
                                                         variaveisApagar
@@ -660,46 +722,37 @@ class _MyVenderState extends State<MyVender> {
                                   ),
                                   ElevatedButton(
                                     onPressed: () async {
-                                      BdFiredart dados = BdFiredart();
-                                      await dados.addBancoFiredart(
-                                          '7894321722016', context);
-                                      MyAddTABLE tabela = MyAddTABLE(
-                                        dados.nome,
-                                        dados.valorUnit,
-                                        dados.quantidade,
-                                        dados.subtotal,
-                                      );
-                                      if (dados.verificador) {
-                                        tabela.adicionarItem();
-                                        setState(() {
-                                          dataRowsFinal.add(tabela.rows!);
-                                          variaveisApagar.add([
-                                            "${dados.nome}",
-                                            false,
-                                            dados.subtotal
-                                          ]);
-                                          quantidade = dados.quantidade;
-                                          subtotal += dados.subtotal;
-                                          if (double.parse(_valorpago.text) >=
-                                              subtotal) {
-                                            setState(
-                                              () {
-                                                troco = double.parse(
-                                                        _valorpago.text) -
-                                                    subtotal;
-                                              },
-                                            );
-                                          } else {
-                                            setState(
-                                              () {
-                                                _valorpago.text = "0.0";
-                                                troco = 0.0;
-                                              },
-                                            );
-                                          }
-                                        });
-                                      }
-                                      //funcionClean();
+                                      await funcionAttVendas();
+                                      //inserir funcao de limpar BD
+                                    },
+                                    style: ButtonStyle(
+                                      foregroundColor: MaterialStatePropertyAll(
+                                          Colors.white),
+                                      backgroundColor: MaterialStatePropertyAll(
+                                          Colors.green),
+                                    ),
+                                    child: FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            "Scan",
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Opacity(
+                                            opacity: 0.5,
+                                            child: Icon(Icons.install_mobile),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      funcionClean();
                                     },
                                     style: ButtonStyle(
                                       foregroundColor: MaterialStatePropertyAll(
@@ -743,3 +796,45 @@ class _MyVenderState extends State<MyVender> {
     );
   }
 }
+
+//Logica funcional botão finalizar para adicionar dados do bd na tabela
+/*
+                                      BdFiredart dados = BdFiredart();
+                                      await dados.addBancoFiredart(
+                                          '7894321722016', context);
+                                      MyAddTABLE tabela = MyAddTABLE(
+                                        dados.nome,
+                                        dados.valorUnit,
+                                        dados.quantidade,
+                                        dados.subtotal,
+                                      );
+                                      if (dados.verificador) {
+                                        tabela.adicionarItem();
+                                        setState(() {
+                                          dataRowsFinal.add(tabela.rows!);
+                                          variaveisApagar.add([
+                                            "${dados.nome}",
+                                            false,
+                                            dados.subtotal
+                                          ]);
+                                          quantidade = dados.quantidade;
+                                          subtotal += dados.subtotal;
+                                          if (double.parse(_valorpago.text) >=
+                                              subtotal) {
+                                            setState(
+                                              () {
+                                                troco = double.parse(
+                                                        _valorpago.text) -
+                                                    subtotal;
+                                              },
+                                            );
+                                          } else {
+                                            setState(
+                                              () {
+                                                _valorpago.text = "0.0";
+                                                troco = 0.0;
+                                              },
+                                            );
+                                          }
+                                        });
+                                      } */

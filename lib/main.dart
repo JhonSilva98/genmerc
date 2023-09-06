@@ -14,7 +14,7 @@ import 'package:firedart/firedart.dart';
 const apiKey = "AIzaSyCLzhrdFXnEX6wYY5-uP5Cad7ce2Grvn6M";
 const projectId = "genmerc-eb644";
 
-void main() {
+Future<void> main() async {
   Firestore.initialize(projectId);
   runApp(const MyApp());
 }

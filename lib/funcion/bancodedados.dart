@@ -10,6 +10,8 @@ class BdFiredart {
   double quantidade = 0;
   double valorUnit = 0; // valor unidade
   bool verificador = false;
+  CollectionReference ref = Firestore.instance.collection('produtos');
+  CollectionReference venda = Firestore.instance.collection('venda');
 
   void adicionar(
     String nomeindex,
@@ -22,10 +24,29 @@ class BdFiredart {
     subtotal = quantidade * valorUnit;
   }
 
-  Future<void> addBancoFiredart(String cod, context) async {
-//aqui vai pegar os nomes dos documentos
-    CollectionReference ref = Firestore.instance.collection('produtos');
-    String teste = cod;
+  Future<void> cleanBDVenda() async {
+    //await venda.
+  }
+
+  Future<List<String>> getListidDocumentsVenda() async {
+    List<String> listaDocument = [];
+    var document = await venda.get();
+    for (var doc in document) {
+      // Use uma expressão regular para encontrar o número
+      RegExp regex = RegExp(r'(\d+)');
+      Match? match = regex.firstMatch(doc.toString());
+      if (match != null) {
+        String numero = match.group(0)!;
+        listaDocument.add(numero);
+        print(numero);
+      } else {
+        print("Número não encontrado na string.");
+      }
+    }
+    return listaDocument;
+  }
+
+  Future<List<String>> getListidDocuments() async {
     List<String> listaDocument = [];
     var document = await ref.get();
     for (var doc in document) {
@@ -40,11 +61,18 @@ class BdFiredart {
         print("Número não encontrado na string.");
       }
     }
+    return listaDocument;
+  }
+
+  Future<void> addBancoFiredart(String cod, context) async {
+//aqui vai pegar os nomes dos documentos
+    String teste = cod;
+    List<String> listNomesDocuments = await getListidDocuments();
 //aqui vai fazer as verificaçoes se existe ou dados na API
     MyGetProductor getProdutosAPI = MyGetProductor();
-    if (listaDocument.isNotEmpty) {
+    if (listNomesDocuments.isNotEmpty) {
       var produto = await getProdutosAPI.getProduct(teste);
-      if (listaDocument.contains(teste)) {
+      if (listNomesDocuments.contains(teste)) {
         print('Contem na lista');
         if (produto != null) {
           String productName =
@@ -188,7 +216,7 @@ class BdFiredart {
             .document(teste)
             .create({'nome': nameProduto, 'valorUnit': valorUnitario});
         var document = await ref.document(teste).get();
-        int numberConvert = document['valorUnit'];
+        var numberConvert = document['valorUnit'];
         double numm = numberConvert.toDouble();
         adicionar(nameProduto, numm);
         print('${nome} ,${subtotal}, ${quantidade}, ${valorUnit}');
@@ -291,7 +319,7 @@ class BdFiredart {
               .document(teste)
               .create({'nome': productName, 'valorUnit': valorUnitario});
           var document = await ref.document(teste).get();
-          int numberConvert = document['valorUnit'];
+          var numberConvert = document['valorUnit'];
           double numm = numberConvert.toDouble();
           adicionar(productName, numm);
           print('${nome} ,${subtotal}, ${quantidade}, ${valorUnit}');

@@ -7,17 +7,19 @@ class MyAddTABLE {
   final double subtotal;
   final double quantidade;
   final double valorUnit;
+  final String cod;
 
   MyAddTABLE(
     this.nome,
     this.valorUnit,
     this.quantidade,
     this.subtotal,
+    this.cod,
   );
 
   void adicionarItem() {
     List<dynamic> listaInicial = [
-      1231451,
+      cod,
       nome,
       valorUnit,
       quantidade,
