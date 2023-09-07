@@ -81,6 +81,10 @@ class BdFiredart {
           var numberConvert = document['valorUnit'];
           double numm = numberConvert.toDouble();
           adicionar(productName, numm);
+          venda.document(cod).create({
+            'nome': productName,
+            'valorUnit': numm,
+          });
           print('${nome} ,${subtotal}, ${quantidade}, ${valorUnit}');
           //print("Product Name: $valor");
         } else {
@@ -219,6 +223,10 @@ class BdFiredart {
         var numberConvert = document['valorUnit'];
         double numm = numberConvert.toDouble();
         adicionar(nameProduto, numm);
+        venda.document(cod).create({
+          'nome': nameProduto,
+          'valorUnit': numm,
+        });
         print('${nome} ,${subtotal}, ${quantidade}, ${valorUnit}');
       } else {
         print('não Contem na lista mas existe');
@@ -322,6 +330,10 @@ class BdFiredart {
           var numberConvert = document['valorUnit'];
           double numm = numberConvert.toDouble();
           adicionar(productName, numm);
+          venda.document(cod).create({
+            'nome': productName,
+            'valorUnit': numm,
+          });
           print('${nome} ,${subtotal}, ${quantidade}, ${valorUnit}');
         } else {
           print("Product not found.");
