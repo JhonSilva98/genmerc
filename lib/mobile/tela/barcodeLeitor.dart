@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:genmerc/desktop/tela/telaTest.dart';
 import 'package:genmerc/funcion/bancodedados.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class BarCodeMobile extends StatefulWidget {
   const BarCodeMobile({super.key});
@@ -11,7 +13,9 @@ class BarCodeMobile extends StatefulWidget {
 }
 
 class _BarCodeMobileState extends State<BarCodeMobile> {
+  final player = AudioPlayer();
   String _scanBarcode = 'Unknown';
+  String recentCod = '';
 
   Future<void> executarFuncaoBarcode(
     String cod,
@@ -24,8 +28,20 @@ class _BarCodeMobileState extends State<BarCodeMobile> {
     FlutterBarcodeScanner.getBarcodeStreamReceiver(
             '#ff6666', 'Cancel', true, ScanMode.BARCODE)!
         .listen((barcode) async {
-      await executarFuncaoBarcode('7894321722016');
-      print(barcode);
+      if (barcode != '-1') {
+        if (recentCod != barcode) {
+          await player.play(AssetSource('beep-07a.mp3'));
+          print(barcode);
+          recentCod = barcode;
+          // Exibir o SnackBar com o valor do código de barras
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const Teste(),
+            ),
+          );
+        }
+      }
+      //await executarFuncaoBarcode('7894321722016');
     });
   }
 
@@ -35,7 +51,8 @@ class _BarCodeMobileState extends State<BarCodeMobile> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
-      await executarFuncaoBarcode(barcodeScanRes);
+      await player.play(AssetSource('assets/beep-07a.mp3'));
+      //await executarFuncaoBarcode(barcodeScanRes);
       print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
@@ -49,6 +66,7 @@ class _BarCodeMobileState extends State<BarCodeMobile> {
     setState(() {
       _scanBarcode = barcodeScanRes;
     });
+    scanQR();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -58,8 +76,11 @@ class _BarCodeMobileState extends State<BarCodeMobile> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-      await executarFuncaoBarcode('7894321722016');
-      print(barcodeScanRes);
+      if (barcodeScanRes != '-1') {
+        await player.play(AssetSource('beep-07a.mp3'));
+        await executarFuncaoBarcode(barcodeScanRes);
+        await scanBarcodeNormal();
+      } else {}
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
@@ -86,11 +107,11 @@ class _BarCodeMobileState extends State<BarCodeMobile> {
                   ElevatedButton(
                       onPressed: () => scanBarcodeNormal(),
                       child: Text('Start barcode scan')),
-                  ElevatedButton(
+                  /*ElevatedButton(
                       onPressed: () => scanQR(), child: Text('Start QR scan')),
                   ElevatedButton(
                       onPressed: () => startBarcodeScanStream(),
-                      child: Text('Start barcode scan stream')),
+                      child: Text('Start barcode scan stream')),*/
                   Text('Scan result : $_scanBarcode\n',
                       style: TextStyle(fontSize: 20))
                 ])));

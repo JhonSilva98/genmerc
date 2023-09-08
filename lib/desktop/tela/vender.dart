@@ -92,7 +92,9 @@ class _MyVenderState extends State<MyVender> {
         String nomeDoc = document['nome'];
         var numberConvert = document['valorUnit'];
         double numm = numberConvert.toDouble();
-        bancoDart.adicionar(nomeDoc, numm);
+        var numberqtt = document['quantidade'];
+        double qtd = numberqtt.toDouble();
+        bancoDart.adicionar(nomeDoc, numm, qtd);
         MyAddTABLE tabela = MyAddTABLE(
           bancoDart.nome,
           bancoDart.valorUnit,

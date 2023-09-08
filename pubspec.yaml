@@ -38,6 +38,7 @@ dependencies:
   openfoodfacts: ^2.10.1
   flutter_barcode_scanner: ^2.0.0
   firedart: ^0.9.7
+  audioplayers: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -65,7 +66,7 @@ flutter:
   assets:
     - assets/fundo-login.png
     - assets/LAYOUTRESPONSIVO.png
-
+    - assets/beep-07a.mp3
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
