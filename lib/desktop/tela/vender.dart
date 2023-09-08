@@ -17,6 +17,8 @@ class _MyVenderState extends State<MyVender> {
   BdFiredart bancoDart = BdFiredart();
   List<DataRow> dataRowsFinal = [];
   List<List<dynamic>> variaveisApagar = [];
+  List<String> idDocument = [];
+  List<String> listaID = [];
 
   double subtotal = 0.0;
   double troco = 0;
@@ -76,54 +78,42 @@ class _MyVenderState extends State<MyVender> {
   }
 
   Future<void> funcionAttVendas() async {
+    String id = await bancoDart.getListidDocumentsVenda();
     CollectionReference ref = Firestore.instance.collection('venda');
-    BdFiredart dados = BdFiredart();
-    List<String> ids = await bancoDart.getListidDocumentsVenda();
 
-    for (var id in ids) {
-      if (await ref.document(id).exists) {
-        var document = await ref.document(id).get();
-        String nomeDoc = document['nome'];
-        var numberConvert = document['valorUnit'];
-        double numm = numberConvert.toDouble();
-        dados.adicionar(nomeDoc, numm);
-        MyAddTABLE tabela = MyAddTABLE(
-          dados.nome,
-          dados.valorUnit,
-          dados.quantidade,
-          double.parse(dados.subtotal.toStringAsFixed(2)),
-          id,
-        );
-        tabela.adicionarItem();
-        setState(
-          () {
-            dataRowsFinal.add(tabela.rows!);
-            variaveisApagar.add([
-              "${nomeDoc}",
-              false,
-              double.parse(dados.subtotal.toStringAsFixed(2)),
-            ]);
-            quantidade = dados.quantidade;
-            subtotal += double.parse(dados.subtotal.toStringAsFixed(2));
-            if (double.parse(_valorpago.text) >= subtotal) {
-              setState(
-                () {
-                  troco = double.parse(_valorpago.text) -
-                      double.parse(dados.subtotal.toStringAsFixed(2));
-                },
-              );
-            } else {
-              setState(
-                () {
-                  _valorpago.text = "0.0";
-                  troco = 0.0;
-                },
-              );
-            }
-          },
-        );
+    var document = await ref.document(id).get();
+    //colocar um if na frente para parar o setState
+    //if listaID nao existir id
+    String nomeDoc = document['nome'];
+    var numberConvert = document['valorUnit'];
+    double numm = numberConvert.toDouble();
+    bancoDart.adicionar(nomeDoc, numm);
+    MyAddTABLE tabela = MyAddTABLE(
+      bancoDart.nome,
+      bancoDart.valorUnit,
+      bancoDart.quantidade,
+      bancoDart.subtotal,
+      id,
+    );
+    tabela.adicionarItem();
+    setState(() {
+      dataRowsFinal.add(tabela.rows!);
+      print(dataRowsFinal.length);
+      variaveisApagar.add([
+        nomeDoc,
+        false,
+        double.parse(bancoDart.subtotal.toStringAsFixed(2)),
+      ]);
+      quantidade = 1;
+      subtotal += (quantidade * numm);
+      if (double.parse(_valorpago.text) >= subtotal) {
+        troco = double.parse(_valorpago.text) - subtotal;
+      } else {
+        _valorpago.text = "0.0";
+        troco = 0.0;
       }
-    }
+    });
+    listaID.add(id);
   }
 
   @override
@@ -213,67 +203,76 @@ class _MyVenderState extends State<MyVender> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            child: FittedBox(
-                              fit: BoxFit.contain,
-                              child: DataTable(
-                                columns: [
-                                  DataColumn(
-                                    label: Text(
-                                      'Cod',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0XFF002b51),
-                                      ),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Nome',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0XFF002b51),
-                                      ),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'V. Unit.',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0XFF002b51),
-                                      ),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Qtd',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0XFF002b51),
-                                      ),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Total',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0XFF002b51),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                                rows: dataRowsFinal,
-                              ),
-                            ),
-                          ),
+                          child: StreamBuilder(
+                              stream:
+                                  Firestore.instance.collection('venda').stream,
+                              builder: (context, snapshot) {
+                                return FutureBuilder(
+                                    future: funcionAttVendas(),
+                                    builder: (context, snapshot) {
+                                      return SingleChildScrollView(
+                                        scrollDirection: Axis.vertical,
+                                        child: FittedBox(
+                                          fit: BoxFit.contain,
+                                          child: DataTable(
+                                            columns: [
+                                              DataColumn(
+                                                label: Text(
+                                                  'Cod',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color(0XFF002b51),
+                                                  ),
+                                                ),
+                                              ),
+                                              DataColumn(
+                                                label: Text(
+                                                  'Nome',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color(0XFF002b51),
+                                                  ),
+                                                ),
+                                              ),
+                                              DataColumn(
+                                                label: Text(
+                                                  'V. Unit.',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color(0XFF002b51),
+                                                  ),
+                                                ),
+                                              ),
+                                              DataColumn(
+                                                label: Text(
+                                                  'Qtd',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color(0XFF002b51),
+                                                  ),
+                                                ),
+                                              ),
+                                              DataColumn(
+                                                label: Text(
+                                                  'Total',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color(0XFF002b51),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                            rows: dataRowsFinal,
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              }),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -795,6 +794,21 @@ class _MyVenderState extends State<MyVender> {
       ),
     );
   }
+
+  /*List<DataRow> _buildRows() {
+    List<DataRow> rows = [];
+    for (var document in documents) {
+      // Acesse os campos do documento e crie as células da linha
+      rows.add(DataRow(
+        cells: <DataCell>[
+          DataCell(Text(document['campo1'])),
+          DataCell(Text(document['campo2'])),
+          // Adicione mais DataCell conforme necessário
+        ],
+      ));
+    }
+    return rows;
+  }*/
 }
 
 //Logica funcional botão finalizar para adicionar dados do bd na tabela

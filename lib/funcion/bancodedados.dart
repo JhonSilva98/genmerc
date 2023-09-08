@@ -28,7 +28,7 @@ class BdFiredart {
     //await venda.
   }
 
-  Future<List<String>> getListidDocumentsVenda() async {
+  Future<String> getListidDocumentsVenda() async {
     List<String> listaDocument = [];
     var document = await venda.get();
     for (var doc in document) {
@@ -38,12 +38,12 @@ class BdFiredart {
       if (match != null) {
         String numero = match.group(0)!;
         listaDocument.add(numero);
-        print(numero);
       } else {
         print("Número não encontrado na string.");
       }
+      print(listaDocument);
     }
-    return listaDocument;
+    return listaDocument.last;
   }
 
   Future<List<String>> getListidDocuments() async {

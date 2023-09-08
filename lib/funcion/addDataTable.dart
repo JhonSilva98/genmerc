@@ -18,42 +18,35 @@ class MyAddTABLE {
   );
 
   void adicionarItem() {
-    List<dynamic> listaInicial = [
-      cod,
-      nome,
-      valorUnit,
-      quantidade,
-      subtotal,
-    ];
     rows = DataRow(
       cells: [
         DataCell(
           Text(
-            '${listaInicial[0]}',
+            cod,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         DataCell(
           Text(
-            '${listaInicial[1]}',
+            nome,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         DataCell(
           Text(
-            '${listaInicial[2]}',
+            '$valorUnit',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         DataCell(
           Text(
-            '${listaInicial[3]}',
+            '$quantidade',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         DataCell(
           Text(
-            '${listaInicial[4]}',
+            '$subtotal',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
