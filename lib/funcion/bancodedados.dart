@@ -28,24 +28,6 @@ class BdFiredart {
     //await venda.
   }
 
-  Future<String> getStringidDocumentsVenda() async {
-    List<String> listaDocument = [];
-    var document = await venda.get();
-    for (var doc in document) {
-      // Use uma expressão regular para encontrar o número
-      RegExp regex = RegExp(r'(\d+)');
-      Match? match = regex.firstMatch(doc.toString());
-      if (match != null) {
-        String numero = match.group(0)!;
-        listaDocument.add(numero);
-      } else {
-        print("Número não encontrado na string.");
-      }
-    }
-    print('este é o ultimo: ${listaDocument.last}');
-    return listaDocument.last;
-  }
-
   Future<List<String>> getListidDocumentsVenda() async {
     List<String> listaDocument = [];
     var document = await venda.get();

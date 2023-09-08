@@ -1,6 +1,7 @@
 import 'package:firedart/firedart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:genmerc/desktop/widgetPadrao/padraoTextfield.dart';
 import 'package:genmerc/funcion/addDataTable.dart';
 import 'package:genmerc/desktop/provider/custom_search_delegate.dart';
 import 'package:genmerc/desktop/widgetPadrao/padrao.dart';
@@ -28,13 +29,17 @@ class _MyVenderState extends State<MyVender> {
 
   void _onsubmited(PointerDownEvent event) {
     if (_valorpago.text.isNotEmpty) {
+      _valorpago.text = _valorpago.text.replaceAll(',', '.');
+      if (_valorpago.text == ',' || _valorpago.text == '.') {
+        _valorpago.text = '0.0';
+      }
       if (double.tryParse(_valorpago.text)! >= subtotal) {
         String num = _valorpago.text.replaceAll(',', '.');
         double numDouble = double.parse(num);
         double resul = numDouble - subtotal;
         if (resul >= 0) {
           setState(() {
-            troco = resul;
+            troco = double.parse(resul.toStringAsFixed(2));
           });
         }
       } else {
@@ -68,7 +73,7 @@ class _MyVenderState extends State<MyVender> {
       CustomSearchDelegate.subtotal = 0;
       CustomSearchDelegate.verificador = false;
       subtotal = 0.0;
-      troco = 0;
+      troco = 0.0;
       quantidade = 0;
       valorUnit = 0;
       _valorpago.text = '0.0';
@@ -77,44 +82,46 @@ class _MyVenderState extends State<MyVender> {
   }
 
   Future<void> funcionAttVendas() async {
-    String id = await bancoDart.getStringidDocumentsVenda();
     CollectionReference ref = Firestore.instance.collection('venda');
+    List<String> listId = await bancoDart.getListidDocumentsVenda();
 
-    var document = await ref.document(id).get();
     //colocar um if na frente para parar o setState
-    if (!listaID.contains(id)) {
-      String nomeDoc = document['nome'];
-      var numberConvert = document['valorUnit'];
-      double numm = numberConvert.toDouble();
-      bancoDart.adicionar(nomeDoc, numm);
-      MyAddTABLE tabela = MyAddTABLE(
-        bancoDart.nome,
-        bancoDart.valorUnit,
-        bancoDart.quantidade,
-        bancoDart.subtotal,
-        id,
-      );
-      tabela.adicionarItem();
-      dataRowsFinal.add(tabela.rows!);
-      print(dataRowsFinal.length);
-      variaveisApagar.add([
-        nomeDoc,
-        false,
-        double.parse(bancoDart.subtotal.toStringAsFixed(2)),
-      ]);
-      setState(() {
-        quantidade = 1;
-        subtotal += (quantidade * numm);
-        if (double.parse(_valorpago.text) >= subtotal) {
-          troco = double.parse(_valorpago.text) - subtotal;
-        } else {
-          _valorpago.text = "0.0";
-          troco = 0.0;
-        }
-      });
+    for (var i in listId) {
+      if (!listaID.contains(i)) {
+        var document = await ref.document(i).get();
+        String nomeDoc = document['nome'];
+        var numberConvert = document['valorUnit'];
+        double numm = numberConvert.toDouble();
+        bancoDart.adicionar(nomeDoc, numm);
+        MyAddTABLE tabela = MyAddTABLE(
+          bancoDart.nome,
+          bancoDart.valorUnit,
+          bancoDart.quantidade,
+          bancoDart.subtotal,
+          i,
+        );
+        tabela.adicionarItem();
+        dataRowsFinal.add(tabela.rows!);
+        variaveisApagar.add([
+          nomeDoc,
+          false,
+          double.parse(bancoDart.subtotal.toStringAsFixed(2)),
+        ]);
+        setState(() {
+          quantidade = bancoDart.quantidade;
+          subtotal += double.parse((quantidade * numm).toStringAsFixed(2));
+          if (double.parse(_valorpago.text) >= subtotal) {
+            double valor = double.parse(_valorpago.text) - subtotal;
+            troco = double.parse(valor.toStringAsFixed(2));
+          } else {
+            _valorpago.text = "0.0";
+            troco = 0.0;
+          }
+        });
 
-      listaID.add(id);
-      print('itens da listaID $listaID');
+        listaID.add(i);
+        print('itens da listaID $listaID');
+      }
     }
   }
 
@@ -158,9 +165,10 @@ class _MyVenderState extends State<MyVender> {
                       if (double.parse(_valorpago.text) >= subtotal) {
                         setState(
                           () {
-                            troco = double.parse(_valorpago.text) -
+                            double valor = double.parse(_valorpago.text) -
                                 double.parse(CustomSearchDelegate.subtotal
                                     .toStringAsFixed(2));
+                            troco = double.parse(valor.toStringAsFixed(2));
                           },
                         );
                       } else {
@@ -308,7 +316,7 @@ class _MyVenderState extends State<MyVender> {
                                     child: FittedBox(
                                       fit: BoxFit.contain,
                                       child: Text(
-                                        "${double.parse(subtotal.toStringAsFixed(2))}",
+                                        "$subtotal",
                                         softWrap: false,
                                         style: TextStyle(
                                             fontSize: 50,
@@ -381,8 +389,7 @@ class _MyVenderState extends State<MyVender> {
                                             ),
                                           ),
                                           Expanded(
-                                            child: Text(
-                                                "${double.parse(subtotal.toStringAsFixed(2))}",
+                                            child: Text("$subtotal",
                                                 style: MyWidgetPadrao
                                                     .myBeautifulTextStyle),
                                           ),
@@ -455,10 +462,15 @@ class _MyVenderState extends State<MyVender> {
                                             child: TextFormField(
                                               controller: _valorpago,
                                               textAlign: TextAlign.center,
+                                              onTap: () {
+                                                setState(() {
+                                                  _valorpago.text = '';
+                                                });
+                                              },
                                               inputFormatters: [
                                                 FilteringTextInputFormatter
                                                     .allow(RegExp(
-                                                        r'^\d+\.?\d{0,2}$')),
+                                                        r'^[\d,]+(\.\d{0,2})?$')),
                                               ],
                                               onTapOutside: _onsubmited,
                                               keyboardType: TextInputType
@@ -568,6 +580,8 @@ class _MyVenderState extends State<MyVender> {
                                           ),
                                           Expanded(
                                             child: Text("$troco",
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
                                                 style: MyWidgetPadrao
                                                     .myBeautifulTextStyle),
                                           ),
@@ -663,10 +677,16 @@ class _MyVenderState extends State<MyVender> {
                                                         Firestore.instance
                                                             .collection(
                                                                 'venda');
-                                                    await ref
+                                                    if (await ref
                                                         .document(
                                                             listaID[index])
-                                                        .delete();
+                                                        .exists) {
+                                                      await ref
+                                                          .document(
+                                                              listaID[index])
+                                                          .delete();
+                                                    }
+
                                                     setState(() {
                                                       subtotal -= double.parse(
                                                           variaveisApagar[index]
@@ -728,36 +748,6 @@ class _MyVenderState extends State<MyVender> {
                                   ),
                                   ElevatedButton(
                                     onPressed: () async {
-                                      await funcionAttVendas();
-                                      //inserir funcao de limpar BD
-                                    },
-                                    style: ButtonStyle(
-                                      foregroundColor: MaterialStatePropertyAll(
-                                          Colors.white),
-                                      backgroundColor: MaterialStatePropertyAll(
-                                          Colors.green),
-                                    ),
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            "Scan",
-                                            style: TextStyle(fontSize: 20),
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Opacity(
-                                            opacity: 0.5,
-                                            child: Icon(Icons.install_mobile),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () async {
                                       funcionClean();
                                     },
                                     style: ButtonStyle(
@@ -801,61 +791,4 @@ class _MyVenderState extends State<MyVender> {
       ),
     );
   }
-
-  /*List<DataRow> _buildRows() {
-    List<DataRow> rows = [];
-    for (var document in documents) {
-      // Acesse os campos do documento e crie as células da linha
-      rows.add(DataRow(
-        cells: <DataCell>[
-          DataCell(Text(document['campo1'])),
-          DataCell(Text(document['campo2'])),
-          // Adicione mais DataCell conforme necessário
-        ],
-      ));
-    }
-    return rows;
-  }*/
 }
-
-//Logica funcional botão finalizar para adicionar dados do bd na tabela
-/*
-                                      BdFiredart dados = BdFiredart();
-                                      await dados.addBancoFiredart(
-                                          '7894321722016', context);
-                                      MyAddTABLE tabela = MyAddTABLE(
-                                        dados.nome,
-                                        dados.valorUnit,
-                                        dados.quantidade,
-                                        dados.subtotal,
-                                      );
-                                      if (dados.verificador) {
-                                        tabela.adicionarItem();
-                                        setState(() {
-                                          dataRowsFinal.add(tabela.rows!);
-                                          variaveisApagar.add([
-                                            "${dados.nome}",
-                                            false,
-                                            dados.subtotal
-                                          ]);
-                                          quantidade = dados.quantidade;
-                                          subtotal += dados.subtotal;
-                                          if (double.parse(_valorpago.text) >=
-                                              subtotal) {
-                                            setState(
-                                              () {
-                                                troco = double.parse(
-                                                        _valorpago.text) -
-                                                    subtotal;
-                                              },
-                                            );
-                                          } else {
-                                            setState(
-                                              () {
-                                                _valorpago.text = "0.0";
-                                                troco = 0.0;
-                                              },
-                                            );
-                                          }
-                                        });
-                                      } */
