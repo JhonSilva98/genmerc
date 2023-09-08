@@ -17,7 +17,6 @@ class _MyVenderState extends State<MyVender> {
   BdFiredart bancoDart = BdFiredart();
   List<DataRow> dataRowsFinal = [];
   List<List<dynamic>> variaveisApagar = [];
-  List<String> idDocument = [];
   List<String> listaID = [];
 
   double subtotal = 0.0;
@@ -78,25 +77,24 @@ class _MyVenderState extends State<MyVender> {
   }
 
   Future<void> funcionAttVendas() async {
-    String id = await bancoDart.getListidDocumentsVenda();
+    String id = await bancoDart.getStringidDocumentsVenda();
     CollectionReference ref = Firestore.instance.collection('venda');
 
     var document = await ref.document(id).get();
     //colocar um if na frente para parar o setState
-    //if listaID nao existir id
-    String nomeDoc = document['nome'];
-    var numberConvert = document['valorUnit'];
-    double numm = numberConvert.toDouble();
-    bancoDart.adicionar(nomeDoc, numm);
-    MyAddTABLE tabela = MyAddTABLE(
-      bancoDart.nome,
-      bancoDart.valorUnit,
-      bancoDart.quantidade,
-      bancoDart.subtotal,
-      id,
-    );
-    tabela.adicionarItem();
-    setState(() {
+    if (!listaID.contains(id)) {
+      String nomeDoc = document['nome'];
+      var numberConvert = document['valorUnit'];
+      double numm = numberConvert.toDouble();
+      bancoDart.adicionar(nomeDoc, numm);
+      MyAddTABLE tabela = MyAddTABLE(
+        bancoDart.nome,
+        bancoDart.valorUnit,
+        bancoDart.quantidade,
+        bancoDart.subtotal,
+        id,
+      );
+      tabela.adicionarItem();
       dataRowsFinal.add(tabela.rows!);
       print(dataRowsFinal.length);
       variaveisApagar.add([
@@ -104,16 +102,20 @@ class _MyVenderState extends State<MyVender> {
         false,
         double.parse(bancoDart.subtotal.toStringAsFixed(2)),
       ]);
-      quantidade = 1;
-      subtotal += (quantidade * numm);
-      if (double.parse(_valorpago.text) >= subtotal) {
-        troco = double.parse(_valorpago.text) - subtotal;
-      } else {
-        _valorpago.text = "0.0";
-        troco = 0.0;
-      }
-    });
-    listaID.add(id);
+      setState(() {
+        quantidade = 1;
+        subtotal += (quantidade * numm);
+        if (double.parse(_valorpago.text) >= subtotal) {
+          troco = double.parse(_valorpago.text) - subtotal;
+        } else {
+          _valorpago.text = "0.0";
+          troco = 0.0;
+        }
+      });
+
+      listaID.add(id);
+      print('itens da listaID $listaID');
+    }
   }
 
   @override
@@ -642,39 +644,44 @@ class _MyVenderState extends State<MyVender> {
                                                 ),
                                               ),
                                               ElevatedButton(
-                                                onPressed: () {
-                                                  setState(
-                                                    () {
-                                                      List<int>
-                                                          indicesToRemove = [];
-                                                      for (var number
-                                                          in variaveisApagar) {
-                                                        if (number[1] == true) {
-                                                          indicesToRemove.add(
-                                                              variaveisApagar
-                                                                  .indexOf(
-                                                                      number));
-                                                        }
-                                                      }
+                                                onPressed: () async {
+                                                  List<int> indicesToRemove =
+                                                      [];
+                                                  for (var number
+                                                      in variaveisApagar) {
+                                                    if (number[1] == true) {
+                                                      indicesToRemove.add(
+                                                          variaveisApagar
+                                                              .indexOf(number));
+                                                    }
+                                                  }
 
-                                                      for (var index
-                                                          in indicesToRemove
-                                                              .reversed) {
-                                                        subtotal -= double.parse(
-                                                            variaveisApagar[
-                                                                    index][2]
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                  for (var index
+                                                      in indicesToRemove
+                                                          .reversed) {
+                                                    CollectionReference ref =
+                                                        Firestore.instance
+                                                            .collection(
+                                                                'venda');
+                                                    await ref
+                                                        .document(
+                                                            listaID[index])
+                                                        .delete();
+                                                    setState(() {
+                                                      subtotal -= double.parse(
+                                                          variaveisApagar[index]
+                                                                  [2]
+                                                              .toStringAsFixed(
+                                                                  2));
 
-                                                        dataRowsFinal
-                                                            .removeAt(index);
-                                                        variaveisApagar
-                                                            .removeAt(index);
-                                                      }
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                  );
+                                                      listaID.removeAt(index);
+                                                      dataRowsFinal
+                                                          .removeAt(index);
+                                                      variaveisApagar
+                                                          .removeAt(index);
+                                                    });
+                                                  }
+                                                  Navigator.of(context).pop();
                                                 },
                                                 child: Text('Apagar'),
                                               ),
