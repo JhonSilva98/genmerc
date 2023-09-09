@@ -84,7 +84,7 @@ class BdFiredart {
               return AlertDialog(
                 title: Text('Adicione'),
                 content: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TextFormField(
@@ -104,6 +104,7 @@ class BdFiredart {
                         fontWeight: FontWeight.bold,
                       ),
                       decoration: InputDecoration(
+                          labelText: 'Digite a quantidade do produto:',
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.white, // Cor da borda branca
@@ -123,7 +124,6 @@ class BdFiredart {
                           ),
                           hintStyle: MyWidgetPadrao.myBeautifulTextStyleBlack),
                     ),
-                    SizedBox(height: 10),
                     Text(
                       'Adicione a quantidade!',
                       style: TextStyle(fontSize: 14, color: Colors.grey),
@@ -142,18 +142,175 @@ class BdFiredart {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      _controllerQTD.text =
-                          _controllerQTD.text.replaceAll(',', '.');
-                      adicionar(
-                          productName, numm, double.parse(_controllerQTD.text));
-                      await venda.document(cod).create({
-                        'cod': cod,
-                        'nome': productName,
-                        'valorUnit': numm,
-                        'quantidade': double.parse(_controllerQTD.text),
-                        'subtotal': subtotal
-                      });
+                      if (_controllerQTD.text.isNotEmpty) {
+                        _controllerQTD.text =
+                            _controllerQTD.text.replaceAll(',', '.');
+                        double sub = double.parse(_controllerQTD.text) * numm;
+                        await venda.document(cod).create({
+                          'cod': cod,
+                          'nome': productName,
+                          'valorUnit': numm,
+                          'quantidade': double.parse(_controllerQTD.text),
+                          'subtotal': sub
+                        });
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    child: Text('Adicionar'),
+                  ),
+                ],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                elevation: 5,
+                backgroundColor: Colors.white,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+              );
+            },
+          );
+        } else {
+          print('NÃO TEM NEM NOME NEM NADA mas tem na API');
+
+          TextEditingController controllervalor = TextEditingController();
+          TextEditingController controllerQTD = TextEditingController(
+            text: "1",
+          );
+          String? nome = produto.productName;
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Adicione'),
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: TextFormField(
+                        controller: controllervalor,
+                        textAlign: TextAlign.center,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'^[\d,]+(\.\d{0,2})?$'),
+                          ),
+                        ],
+                        keyboardType: TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 50,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        decoration: InputDecoration(
+                            labelText: 'Digite o valor do produto:',
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.white, // Cor da borda branca
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50.0),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors
+                                    .white, // Cor da borda branca quando focado
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                            ),
+                            hintStyle:
+                                MyWidgetPadrao.myBeautifulTextStyleBlack),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Flexible(
+                      child: TextFormField(
+                        controller: controllerQTD,
+                        textAlign: TextAlign.center,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'^[\d,]+(\.\d{0,2})?$'),
+                          ),
+                        ],
+                        keyboardType: TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 50,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        decoration: InputDecoration(
+                            labelText: 'Digite a quantidade do produto:',
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.white, // Cor da borda branca
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50.0),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors
+                                    .white, // Cor da borda branca quando focado
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                            ),
+                            hintStyle:
+                                MyWidgetPadrao.myBeautifulTextStyleBlack),
+                      ),
+                    ),
+                    Text(
+                      'Adicione os dados inexistentes',
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
                       Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Fechar',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (controllervalor.text.isNotEmpty &&
+                          controllerQTD.text.isNotEmpty) {
+                        controllervalor.text =
+                            controllervalor.text.replaceAll(',', '.');
+                        controllerQTD.text =
+                            controllerQTD.text.replaceAll(',', '.');
+                        String newNome = nome!;
+                        ref.document(cod).create({
+                          'cod': cod,
+                          'nome': newNome,
+                          'valorUnit': double.parse(controllervalor.text),
+                        });
+                        double sub = double.parse(controllervalor.text) *
+                            double.parse(controllerQTD.text);
+                        venda.document(cod).create({
+                          'cod': cod,
+                          'nome': newNome,
+                          'valorUnit': double.parse(controllervalor.text),
+                          'quantidade': double.parse(controllerQTD.text),
+                          'subtotal': sub
+                        });
+                        Navigator.of(context).pop();
+                      }
                     },
                     child: Text('Adicionar'),
                   ),
@@ -186,7 +343,6 @@ class BdFiredart {
             return AlertDialog(
               title: Text('Adicione'),
               content: Column(
-                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -201,82 +357,7 @@ class BdFiredart {
                         fontWeight: FontWeight.bold,
                       ),
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.white, // Cor da borda branca
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(50.0),
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors
-                                  .white, // Cor da borda branca quando focado
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8.0),
-                            ),
-                          ),
-                          hintStyle: MyWidgetPadrao.myBeautifulTextStyleBlack),
-                    ),
-                  ),
-                  Flexible(
-                    child: TextFormField(
-                      controller: controllervalor,
-                      textAlign: TextAlign.center,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^[\d,]+(\.\d{0,2})?$'),
-                        ),
-                      ],
-                      keyboardType: TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.white, // Cor da borda branca
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(50.0),
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors
-                                  .white, // Cor da borda branca quando focado
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8.0),
-                            ),
-                          ),
-                          hintStyle: MyWidgetPadrao.myBeautifulTextStyleBlack),
-                    ),
-                  ),
-                  Flexible(
-                    child: TextFormField(
-                      controller: controllerQTD,
-                      textAlign: TextAlign.center,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^[\d,]+(\.\d{0,2})?$'),
-                        ),
-                      ],
-                      keyboardType: TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
+                          labelText: 'Digite o nome do produto',
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.white, // Cor da borda branca
@@ -298,6 +379,85 @@ class BdFiredart {
                     ),
                   ),
                   SizedBox(height: 10),
+                  Flexible(
+                    child: TextFormField(
+                      controller: controllervalor,
+                      textAlign: TextAlign.center,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^[\d,]+(\.\d{0,2})?$'),
+                        ),
+                      ],
+                      keyboardType: TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      decoration: InputDecoration(
+                          labelText: 'Digite o valor do produto:',
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white, // Cor da borda branca
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(50.0),
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors
+                                  .white, // Cor da borda branca quando focado
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                          ),
+                          hintStyle: MyWidgetPadrao.myBeautifulTextStyleBlack),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Flexible(
+                    child: TextFormField(
+                      controller: controllerQTD,
+                      textAlign: TextAlign.center,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^[\d,]+(\.\d{0,2})?$'),
+                        ),
+                      ],
+                      keyboardType: TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      decoration: InputDecoration(
+                          labelText: 'Digite a quantidade do produto:',
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white, // Cor da borda branca
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(50.0),
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors
+                                  .white, // Cor da borda branca quando focado
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                          ),
+                          hintStyle: MyWidgetPadrao.myBeautifulTextStyleBlack),
+                    ),
+                  ),
                   Text(
                     'Adicione os dados inexistentes',
                     style: TextStyle(fontSize: 14, color: Colors.grey),
@@ -316,29 +476,30 @@ class BdFiredart {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    controllervalor.text =
-                        controllervalor.text.replaceAll(',', '.');
-                    controllerQTD.text =
-                        controllervalor.text.replaceAll(',', '.');
-                    adicionar(
-                        controllerNome.text,
-                        double.parse(controllervalor.text),
-                        double.parse(controllerQTD.text));
-                    ref.document(cod).create({
-                      'cod': cod,
-                      'nome': nome,
-                      'valorUnit': valorUnit,
-                      'quantidade': quantidade,
-                      'subtotal': subtotal
-                    });
-                    venda.document(cod).create({
-                      'cod': cod,
-                      'nome': nome,
-                      'valorUnit': valorUnit,
-                      'quantidade': quantidade,
-                      'subtotal': subtotal
-                    });
-                    Navigator.of(context).pop();
+                    if (controllerNome.text.isNotEmpty &&
+                        controllervalor.text.isNotEmpty &&
+                        controllerQTD.text.isNotEmpty) {
+                      controllervalor.text =
+                          controllervalor.text.replaceAll(',', '.');
+                      controllerQTD.text =
+                          controllerQTD.text.replaceAll(',', '.');
+
+                      ref.document(cod).create({
+                        'cod': cod,
+                        'nome': controllerNome.text,
+                        'valorUnit': double.parse(controllervalor.text),
+                      });
+                      double sub = double.parse(controllervalor.text) *
+                          double.parse(controllerQTD.text);
+                      venda.document(cod).create({
+                        'cod': cod,
+                        'nome': controllerNome.text,
+                        'valorUnit': double.parse(controllervalor.text),
+                        'quantidade': double.parse(controllerQTD.text),
+                        'subtotal': sub
+                      });
+                      Navigator.of(context).pop();
+                    }
                   },
                   child: Text('Adicionar'),
                 ),
@@ -367,7 +528,6 @@ class BdFiredart {
           return AlertDialog(
             title: Text('Adicione'),
             content: Column(
-              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -388,6 +548,7 @@ class BdFiredart {
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: InputDecoration(
+                        labelText: 'Digite a quantidade do produto:',
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.white, // Cor da borda branca
@@ -410,7 +571,7 @@ class BdFiredart {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Ess item ja exixte altere a quantidade!',
+                  'Esse item ja existe altere a quantidade!',
                   style: TextStyle(fontSize: 14, color: Colors.grey),
                 ),
               ],
@@ -427,7 +588,21 @@ class BdFiredart {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  Navigator.of(context).pop();
+                  if (_controllerQTD.text.isNotEmpty) {
+                    _controllerQTD.text =
+                        _controllerQTD.text.replaceAll(',', '.');
+
+                    double newQTD = double.tryParse(_controllerQTD.text) ?? 1.0;
+                    var doc = await venda.document(cod).get();
+                    var numberConvert = doc['valorUnit'];
+                    double numm = numberConvert.toDouble();
+                    double sub = newQTD * numm;
+                    await venda.document(cod).update({
+                      'quantidade': newQTD,
+                      'subtotal': sub,
+                    });
+                    Navigator.of(context).pop();
+                  }
                 },
                 child: Text('Adicionar'),
               ),
@@ -444,12 +619,6 @@ class BdFiredart {
           );
         },
       );
-      _controllerQTD.text = _controllerQTD.text.replaceAll(',', '.');
-
-      double newQTD = double.tryParse(_controllerQTD.text) ?? 1.0;
-      venda.document(cod).set({
-        'quantidade': newQTD,
-      });
     }
   }
 }

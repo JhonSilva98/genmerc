@@ -80,7 +80,7 @@ class _BarCodeMobileState extends State<BarCodeMobile> {
         await player.play(AssetSource('beep-07a.mp3'));
         await executarFuncaoBarcode(barcodeScanRes);
         await scanBarcodeNormal();
-      } else {}
+      }
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }

@@ -94,12 +94,14 @@ class _MyVenderState extends State<MyVender> {
         double numm = numberConvert.toDouble();
         var numberqtt = document['quantidade'];
         double qtd = numberqtt.toDouble();
-        bancoDart.adicionar(nomeDoc, numm, qtd);
+        var numbersub = document['subtotal'];
+        double subto = numbersub.toDouble();
+        //bancoDart.adicionar(nomeDoc, numm, qtd);
         MyAddTABLE tabela = MyAddTABLE(
-          bancoDart.nome,
-          bancoDart.valorUnit,
-          bancoDart.quantidade,
-          bancoDart.subtotal,
+          nomeDoc,
+          numm,
+          qtd,
+          subto,
           i,
         );
         tabela.adicionarItem();
@@ -107,11 +109,10 @@ class _MyVenderState extends State<MyVender> {
         variaveisApagar.add([
           nomeDoc,
           false,
-          double.parse(bancoDart.subtotal.toStringAsFixed(2)),
+          double.parse(subto.toStringAsFixed(2)),
         ]);
         setState(() {
-          quantidade = bancoDart.quantidade;
-          subtotal += double.parse((quantidade * numm).toStringAsFixed(2));
+          subtotal += double.parse((qtd * numm).toStringAsFixed(2));
           if (double.parse(_valorpago.text) >= subtotal) {
             double valor = double.parse(_valorpago.text) - subtotal;
             troco = double.parse(valor.toStringAsFixed(2));
@@ -122,7 +123,6 @@ class _MyVenderState extends State<MyVender> {
         });
 
         listaID.add(i);
-        print('itens da listaID $listaID');
       }
     }
   }
