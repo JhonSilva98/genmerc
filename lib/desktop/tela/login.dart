@@ -31,7 +31,7 @@ class _MyLoginState extends State<MyLogin> {
                 height: MediaQuery.of(context).size.height / 2,
                 width: MediaQuery.of(context).size.width / 3,
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
+                    gradient: const LinearGradient(colors: [
                       Color(0xFF072d90),
                       Color(0xFF1a8f87),
                       Color(0Xff3eb66f)
@@ -45,9 +45,9 @@ class _MyLoginState extends State<MyLogin> {
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: TextFormField(
                           keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               label: Text(
                                 "E-mail",
                                 style: TextStyle(color: Colors.white),
@@ -63,9 +63,9 @@ class _MyLoginState extends State<MyLogin> {
                         child: TextFormField(
                           keyboardType: TextInputType.visiblePassword,
                           obscureText: true,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               label: Text(
                                 "Senha",
                                 style: TextStyle(color: Colors.white),
@@ -84,7 +84,7 @@ class _MyLoginState extends State<MyLogin> {
                                   builder: (context) => const MyTelaInicial()),
                             );
                           },
-                          child: Text("LOGIN"))
+                          child: const Text("LOGIN"))
                     ],
                   ),
                 ),

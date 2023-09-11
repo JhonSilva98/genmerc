@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:genmerc/desktop/tela/telaTest.dart';
 import 'package:genmerc/funcion/bancodedados.dart';
 import 'package:audioplayers/audioplayers.dart';
 
@@ -34,11 +33,6 @@ class _BarCodeMobileState extends State<BarCodeMobile> {
           print(barcode);
           recentCod = barcode;
           // Exibir o SnackBar com o valor do código de barras
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const Teste(),
-            ),
-          );
         }
       }
       //await executarFuncaoBarcode('7894321722016');
@@ -106,14 +100,14 @@ class _BarCodeMobileState extends State<BarCodeMobile> {
                 children: <Widget>[
                   ElevatedButton(
                       onPressed: () => scanBarcodeNormal(),
-                      child: Text('Start barcode scan')),
+                      child: const Text('Start barcode scan')),
                   /*ElevatedButton(
                       onPressed: () => scanQR(), child: Text('Start QR scan')),
                   ElevatedButton(
                       onPressed: () => startBarcodeScanStream(),
                       child: Text('Start barcode scan stream')),*/
                   Text('Scan result : $_scanBarcode\n',
-                      style: TextStyle(fontSize: 20))
+                      style: const TextStyle(fontSize: 20))
                 ])));
   }
 }

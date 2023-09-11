@@ -19,10 +19,6 @@ class BdFiredart {
     subtotal = quantidade * valorUnit;
   }
 
-  Future<void> cleanBDVenda() async {
-    //await venda.
-  }
-
   Future<List<String>> getListidDocumentsVenda() async {
     List<String> listaDocument = [];
     var document = await venda.get();
@@ -74,7 +70,7 @@ class BdFiredart {
           String productName = document['nome'];
           var numberConvert = document['valorUnit'];
           double numm = numberConvert.toDouble();
-          TextEditingController _controllerQTD = TextEditingController(
+          TextEditingController controllerQTD0 = TextEditingController(
             text: "1",
           );
           await showDialog(
@@ -82,30 +78,30 @@ class BdFiredart {
             barrierDismissible: false,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Adicione'),
+                title: const Text('Adicione'),
                 content: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TextFormField(
-                      controller: _controllerQTD,
+                      controller: controllerQTD0,
                       textAlign: TextAlign.center,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
                           RegExp(r'^[\d,]+(\.\d{0,2})?$'),
                         ),
                       ],
-                      keyboardType: TextInputType.numberWithOptions(
+                      keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 50,
                         fontWeight: FontWeight.bold,
                       ),
                       decoration: InputDecoration(
                           labelText: 'Digite a quantidade do produto:',
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.white, // Cor da borda branca
                             ),
@@ -113,7 +109,7 @@ class BdFiredart {
                               Radius.circular(50.0),
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
+                          focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors
                                   .white, // Cor da borda branca quando focado
@@ -124,7 +120,7 @@ class BdFiredart {
                           ),
                           hintStyle: MyWidgetPadrao.myBeautifulTextStyleBlack),
                     ),
-                    Text(
+                    const Text(
                       'Adicione a quantidade!',
                       style: TextStyle(fontSize: 14, color: Colors.grey),
                     ),
@@ -135,28 +131,28 @@ class BdFiredart {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text(
+                    child: const Text(
                       'Fechar',
                       style: TextStyle(color: Colors.blue),
                     ),
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      if (_controllerQTD.text.isNotEmpty) {
-                        _controllerQTD.text =
-                            _controllerQTD.text.replaceAll(',', '.');
-                        double sub = double.parse(_controllerQTD.text) * numm;
+                      if (controllerQTD0.text.isNotEmpty) {
+                        controllerQTD0.text =
+                            controllerQTD0.text.replaceAll(',', '.');
+                        double sub = double.parse(controllerQTD0.text) * numm;
                         await venda.document(cod).create({
                           'cod': cod,
                           'nome': productName,
                           'valorUnit': numm,
-                          'quantidade': double.parse(_controllerQTD.text),
+                          'quantidade': double.parse(controllerQTD0.text),
                           'subtotal': sub
                         });
                         Navigator.of(context).pop();
                       }
                     },
-                    child: Text('Adicionar'),
+                    child: const Text('Adicionar'),
                   ),
                 ],
                 shape: RoundedRectangleBorder(
@@ -164,7 +160,7 @@ class BdFiredart {
                 ),
                 elevation: 5,
                 backgroundColor: Colors.white,
-                contentPadding: EdgeInsets.symmetric(
+                contentPadding: const EdgeInsets.symmetric(
                   horizontal: 20,
                   vertical: 10,
                 ),
@@ -184,7 +180,7 @@ class BdFiredart {
             barrierDismissible: false,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Adicione'),
+                title: const Text('Adicione'),
                 content: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -198,17 +194,17 @@ class BdFiredart {
                             RegExp(r'^[\d,]+(\.\d{0,2})?$'),
                           ),
                         ],
-                        keyboardType: TextInputType.numberWithOptions(
+                        keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 50,
                           fontWeight: FontWeight.bold,
                         ),
                         decoration: InputDecoration(
                             labelText: 'Digite o valor do produto:',
-                            border: OutlineInputBorder(
+                            border: const OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.white, // Cor da borda branca
                               ),
@@ -216,7 +212,7 @@ class BdFiredart {
                                 Radius.circular(50.0),
                               ),
                             ),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors
                                     .white, // Cor da borda branca quando focado
@@ -229,7 +225,7 @@ class BdFiredart {
                                 MyWidgetPadrao.myBeautifulTextStyleBlack),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Flexible(
                       child: TextFormField(
                         controller: controllerQTD,
@@ -239,17 +235,17 @@ class BdFiredart {
                             RegExp(r'^[\d,]+(\.\d{0,2})?$'),
                           ),
                         ],
-                        keyboardType: TextInputType.numberWithOptions(
+                        keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 50,
                           fontWeight: FontWeight.bold,
                         ),
                         decoration: InputDecoration(
                             labelText: 'Digite a quantidade do produto:',
-                            border: OutlineInputBorder(
+                            border: const OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.white, // Cor da borda branca
                               ),
@@ -257,7 +253,7 @@ class BdFiredart {
                                 Radius.circular(50.0),
                               ),
                             ),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors
                                     .white, // Cor da borda branca quando focado
@@ -270,7 +266,7 @@ class BdFiredart {
                                 MyWidgetPadrao.myBeautifulTextStyleBlack),
                       ),
                     ),
-                    Text(
+                    const Text(
                       'Adicione os dados inexistentes',
                       style: TextStyle(fontSize: 14, color: Colors.grey),
                     ),
@@ -281,7 +277,7 @@ class BdFiredart {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text(
+                    child: const Text(
                       'Fechar',
                       style: TextStyle(color: Colors.blue),
                     ),
@@ -312,7 +308,7 @@ class BdFiredart {
                         Navigator.of(context).pop();
                       }
                     },
-                    child: Text('Adicionar'),
+                    child: const Text('Adicionar'),
                   ),
                 ],
                 shape: RoundedRectangleBorder(
@@ -320,7 +316,7 @@ class BdFiredart {
                 ),
                 elevation: 5,
                 backgroundColor: Colors.white,
-                contentPadding: EdgeInsets.symmetric(
+                contentPadding: const EdgeInsets.symmetric(
                   horizontal: 20,
                   vertical: 10,
                 ),
@@ -330,115 +326,44 @@ class BdFiredart {
         }
       } else {
         print('NÃO TEM NEM NOME NEM NADA');
-
-        TextEditingController controllerNome = TextEditingController();
-        TextEditingController controllervalor = TextEditingController();
-        TextEditingController controllerQTD = TextEditingController(
-          text: "1",
-        );
-        await showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Adicione'),
-              content: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Flexible(
-                    child: TextFormField(
-                      controller: controllerNome,
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.name,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                          labelText: 'Digite o nome do produto',
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.white, // Cor da borda branca
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(50.0),
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors
-                                  .white, // Cor da borda branca quando focado
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8.0),
-                            ),
-                          ),
-                          hintStyle: MyWidgetPadrao.myBeautifulTextStyleBlack),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Flexible(
-                    child: TextFormField(
-                      controller: controllervalor,
+        if (listNomesDocuments.contains(cod)) {
+          print('Contem na lista');
+          var document = await ref.document(cod).get();
+          String productName = document['nome'];
+          var numberConvert = document['valorUnit'];
+          double numm = numberConvert.toDouble();
+          TextEditingController controllerQTD0 = TextEditingController(
+            text: "1",
+          );
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Adicione'),
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      controller: controllerQTD0,
                       textAlign: TextAlign.center,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
                           RegExp(r'^[\d,]+(\.\d{0,2})?$'),
                         ),
                       ],
-                      keyboardType: TextInputType.numberWithOptions(
+                      keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                          labelText: 'Digite o valor do produto:',
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.white, // Cor da borda branca
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(50.0),
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors
-                                  .white, // Cor da borda branca quando focado
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8.0),
-                            ),
-                          ),
-                          hintStyle: MyWidgetPadrao.myBeautifulTextStyleBlack),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Flexible(
-                    child: TextFormField(
-                      controller: controllerQTD,
-                      textAlign: TextAlign.center,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^[\d,]+(\.\d{0,2})?$'),
-                        ),
-                      ],
-                      keyboardType: TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 50,
                         fontWeight: FontWeight.bold,
                       ),
                       decoration: InputDecoration(
                           labelText: 'Digite a quantidade do produto:',
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.white, // Cor da borda branca
                             ),
@@ -446,7 +371,7 @@ class BdFiredart {
                               Radius.circular(50.0),
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
+                          focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors
                                   .white, // Cor da borda branca quando focado
@@ -457,68 +382,246 @@ class BdFiredart {
                           ),
                           hintStyle: MyWidgetPadrao.myBeautifulTextStyleBlack),
                     ),
+                    const Text(
+                      'Adicione a quantidade!',
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text(
+                      'Fechar',
+                      style: TextStyle(color: Colors.blue),
+                    ),
                   ),
-                  Text(
-                    'Adicione os dados inexistentes',
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (controllerQTD0.text.isNotEmpty) {
+                        controllerQTD0.text =
+                            controllerQTD0.text.replaceAll(',', '.');
+                        double sub = double.parse(controllerQTD0.text) * numm;
+                        await venda.document(cod).create({
+                          'cod': cod,
+                          'nome': productName,
+                          'valorUnit': numm,
+                          'quantidade': double.parse(controllerQTD0.text),
+                          'subtotal': sub
+                        });
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    child: const Text('Adicionar'),
                   ),
                 ],
-              ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'Fechar',
-                    style: TextStyle(color: Colors.blue),
-                  ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (controllerNome.text.isNotEmpty &&
-                        controllervalor.text.isNotEmpty &&
-                        controllerQTD.text.isNotEmpty) {
-                      controllervalor.text =
-                          controllervalor.text.replaceAll(',', '.');
-                      controllerQTD.text =
-                          controllerQTD.text.replaceAll(',', '.');
-
-                      ref.document(cod).create({
-                        'cod': cod,
-                        'nome': controllerNome.text,
-                        'valorUnit': double.parse(controllervalor.text),
-                      });
-                      double sub = double.parse(controllervalor.text) *
-                          double.parse(controllerQTD.text);
-                      venda.document(cod).create({
-                        'cod': cod,
-                        'nome': controllerNome.text,
-                        'valorUnit': double.parse(controllervalor.text),
-                        'quantidade': double.parse(controllerQTD.text),
-                        'subtotal': sub
-                      });
+                elevation: 5,
+                backgroundColor: Colors.white,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+              );
+            },
+          );
+        } else {
+          TextEditingController controllerNome = TextEditingController();
+          TextEditingController controllervalor = TextEditingController();
+          TextEditingController controllerQTD = TextEditingController(
+            text: "1",
+          );
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Adicione'),
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: TextFormField(
+                        controller: controllerNome,
+                        textAlign: TextAlign.center,
+                        keyboardType: TextInputType.name,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        decoration: InputDecoration(
+                            labelText: 'Digite o nome do produto',
+                            border: const OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.white, // Cor da borda branca
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50.0),
+                              ),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors
+                                    .white, // Cor da borda branca quando focado
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                            ),
+                            hintStyle:
+                                MyWidgetPadrao.myBeautifulTextStyleBlack),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Flexible(
+                      child: TextFormField(
+                        controller: controllervalor,
+                        textAlign: TextAlign.center,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'^[\d,]+(\.\d{0,2})?$'),
+                          ),
+                        ],
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        decoration: InputDecoration(
+                            labelText: 'Digite o valor do produto:',
+                            border: const OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.white, // Cor da borda branca
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50.0),
+                              ),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors
+                                    .white, // Cor da borda branca quando focado
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                            ),
+                            hintStyle:
+                                MyWidgetPadrao.myBeautifulTextStyleBlack),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Flexible(
+                      child: TextFormField(
+                        controller: controllerQTD,
+                        textAlign: TextAlign.center,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'^[\d,]+(\.\d{0,2})?$'),
+                          ),
+                        ],
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        decoration: InputDecoration(
+                            labelText: 'Digite a quantidade do produto:',
+                            border: const OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.white, // Cor da borda branca
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50.0),
+                              ),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors
+                                    .white, // Cor da borda branca quando focado
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                            ),
+                            hintStyle:
+                                MyWidgetPadrao.myBeautifulTextStyleBlack),
+                      ),
+                    ),
+                    const Text(
+                      'Adicione os dados inexistentes',
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
                       Navigator.of(context).pop();
-                    }
-                  },
-                  child: Text('Adicionar'),
+                    },
+                    child: const Text(
+                      'Fechar',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (controllerNome.text.isNotEmpty &&
+                          controllervalor.text.isNotEmpty &&
+                          controllerQTD.text.isNotEmpty) {
+                        controllervalor.text =
+                            controllervalor.text.replaceAll(',', '.');
+                        controllerQTD.text =
+                            controllerQTD.text.replaceAll(',', '.');
+
+                        ref.document(cod).create({
+                          'cod': cod,
+                          'nome': controllerNome.text,
+                          'valorUnit': double.parse(controllervalor.text),
+                        });
+                        double sub = double.parse(controllervalor.text) *
+                            double.parse(controllerQTD.text);
+                        venda.document(cod).create({
+                          'cod': cod,
+                          'nome': controllerNome.text,
+                          'valorUnit': double.parse(controllervalor.text),
+                          'quantidade': double.parse(controllerQTD.text),
+                          'subtotal': sub
+                        });
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    child: const Text('Adicionar'),
+                  ),
+                ],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
-              ],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              elevation: 5,
-              backgroundColor: Colors.white,
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 10,
-              ),
-            );
-          },
-        );
+                elevation: 5,
+                backgroundColor: Colors.white,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+              );
+            },
+          );
+        }
       }
     } else {
-      TextEditingController _controllerQTD = TextEditingController(
+      TextEditingController controllerQTD0 = TextEditingController(
         text: "1",
       );
       await showDialog(
@@ -526,30 +629,31 @@ class BdFiredart {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Adicione'),
+            title: const Text('Adicione'),
             content: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Flexible(
                   child: TextFormField(
-                    controller: _controllerQTD,
+                    controller: controllerQTD0,
                     textAlign: TextAlign.center,
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d+\.?\d{0,2}$')),
+                        RegExp(r'^[\d,]+(\.\d{0,2})?$'),
+                      ),
                     ],
-                    keyboardType: TextInputType.numberWithOptions(
+                    keyboardType: const TextInputType.numberWithOptions(
                       decimal: true,
                     ),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 50,
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: InputDecoration(
                         labelText: 'Digite a quantidade do produto:',
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.white, // Cor da borda branca
                           ),
@@ -557,7 +661,7 @@ class BdFiredart {
                             Radius.circular(50.0),
                           ),
                         ),
-                        focusedBorder: OutlineInputBorder(
+                        focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors
                                 .white, // Cor da borda branca quando focado
@@ -569,8 +673,8 @@ class BdFiredart {
                         hintStyle: MyWidgetPadrao.myBeautifulTextStyleBlack),
                   ),
                 ),
-                SizedBox(height: 10),
-                Text(
+                const SizedBox(height: 10),
+                const Text(
                   'Esse item ja existe altere a quantidade!',
                   style: TextStyle(fontSize: 14, color: Colors.grey),
                 ),
@@ -581,30 +685,38 @@ class BdFiredart {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text(
+                child: const Text(
                   'Fechar',
                   style: TextStyle(color: Colors.blue),
                 ),
               ),
               ElevatedButton(
                 onPressed: () async {
-                  if (_controllerQTD.text.isNotEmpty) {
-                    _controllerQTD.text =
-                        _controllerQTD.text.replaceAll(',', '.');
+                  if (controllerQTD0.text.isNotEmpty) {
+                    controllerQTD0.text =
+                        controllerQTD0.text.replaceAll(',', '.');
 
-                    double newQTD = double.tryParse(_controllerQTD.text) ?? 1.0;
+                    double newQTD = double.tryParse(controllerQTD0.text) ?? 1.0;
+
                     var doc = await venda.document(cod).get();
+
                     var numberConvert = doc['valorUnit'];
                     double numm = numberConvert.toDouble();
-                    double sub = newQTD * numm;
+
+                    var numberqtd = doc['quantidade'];
+                    double qtdAtual = numberqtd.toDouble();
+
+                    double newQTDSoma = newQTD + qtdAtual;
+
+                    double sub = newQTDSoma * numm;
                     await venda.document(cod).update({
-                      'quantidade': newQTD,
+                      'quantidade': newQTDSoma,
                       'subtotal': sub,
                     });
                     Navigator.of(context).pop();
                   }
                 },
-                child: Text('Adicionar'),
+                child: const Text('Adicionar'),
               ),
             ],
             shape: RoundedRectangleBorder(
@@ -612,7 +724,7 @@ class BdFiredart {
             ),
             elevation: 5,
             backgroundColor: Colors.white,
-            contentPadding: EdgeInsets.symmetric(
+            contentPadding: const EdgeInsets.symmetric(
               horizontal: 20,
               vertical: 10,
             ),

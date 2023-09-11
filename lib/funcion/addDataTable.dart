@@ -23,31 +23,31 @@ class MyAddTABLE {
         DataCell(
           Text(
             cod,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         DataCell(
           Text(
             nome,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         DataCell(
           Text(
             '$valorUnit',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         DataCell(
           Text(
             '$quantidade',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         DataCell(
           Text(
             '$subtotal',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
       ],

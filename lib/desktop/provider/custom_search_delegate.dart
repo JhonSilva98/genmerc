@@ -75,7 +75,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
         onPressed: () {
           query = '';
         },
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
       ),
     ];
   }
@@ -86,7 +86,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
       onPressed: () {
         close(context, 'Cancelar');
       },
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
     );
   }
 
@@ -123,7 +123,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                     }
                   },
                   child: AlertDialog(
-                    title: Text('Adicione'),
+                    title: const Text('Adicione'),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -143,16 +143,16 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                             FilteringTextInputFormatter.allow(
                                 RegExp(r'^\d+\.?\d{0,2}$')),
                           ],
-                          keyboardType: TextInputType.numberWithOptions(
+                          keyboardType: const TextInputType.numberWithOptions(
                             decimal: true,
                           ),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 50,
                             fontWeight: FontWeight.bold,
                           ),
                           decoration: InputDecoration(
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors.white, // Cor da borda branca
                                 ),
@@ -160,7 +160,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                                   Radius.circular(50.0),
                                 ),
                               ),
-                              focusedBorder: OutlineInputBorder(
+                              focusedBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors
                                       .white, // Cor da borda branca quando focado
@@ -172,8 +172,8 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                               hintStyle:
                                   MyWidgetPadrao.myBeautifulTextStyleBlack),
                         ),
-                        SizedBox(height: 10),
-                        Text(
+                        const SizedBox(height: 10),
+                        const Text(
                           'Adicione a quantidade!',
                           style: TextStyle(fontSize: 14, color: Colors.grey),
                         ),
@@ -184,7 +184,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                         onPressed: () {
                           cancelar(context);
                         },
-                        child: Text(
+                        child: const Text(
                           'Fechar',
                           style: TextStyle(color: Colors.blue),
                         ),
@@ -198,7 +198,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                             context,
                           );
                         },
-                        child: Text('Adicionar'),
+                        child: const Text('Adicionar'),
                       ),
                     ],
                     shape: RoundedRectangleBorder(
@@ -206,7 +206,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                     ),
                     elevation: 5,
                     backgroundColor: Colors.white,
-                    contentPadding: EdgeInsets.symmetric(
+                    contentPadding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 10,
                     ),
@@ -259,7 +259,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                     }
                   },
                   child: AlertDialog(
-                    title: Text('Adicione'),
+                    title: const Text('Adicione'),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -279,16 +279,16 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                             FilteringTextInputFormatter.allow(
                                 RegExp(r'^\d+\.?\d{0,2}$')),
                           ],
-                          keyboardType: TextInputType.numberWithOptions(
+                          keyboardType: const TextInputType.numberWithOptions(
                             decimal: true,
                           ),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 50,
                             fontWeight: FontWeight.bold,
                           ),
                           decoration: InputDecoration(
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors.white, // Cor da borda branca
                                 ),
@@ -296,7 +296,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                                   Radius.circular(50.0),
                                 ),
                               ),
-                              focusedBorder: OutlineInputBorder(
+                              focusedBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors
                                       .white, // Cor da borda branca quando focado
@@ -308,8 +308,8 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                               hintStyle:
                                   MyWidgetPadrao.myBeautifulTextStyleBlack),
                         ),
-                        SizedBox(height: 10),
-                        Text(
+                        const SizedBox(height: 10),
+                        const Text(
                           'Adicione a quantidade!',
                           style: TextStyle(fontSize: 14, color: Colors.grey),
                         ),
@@ -320,7 +320,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                         onPressed: () {
                           cancelar(context);
                         },
-                        child: Text(
+                        child: const Text(
                           'Fechar',
                           style: TextStyle(color: Colors.blue),
                         ),
@@ -334,7 +334,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                             context,
                           );
                         },
-                        child: Text('Adicionar'),
+                        child: const Text('Adicionar'),
                       ),
                     ],
                     shape: RoundedRectangleBorder(
@@ -342,7 +342,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                     ),
                     elevation: 5,
                     backgroundColor: Colors.white,
-                    contentPadding: EdgeInsets.symmetric(
+                    contentPadding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 10,
                     ),

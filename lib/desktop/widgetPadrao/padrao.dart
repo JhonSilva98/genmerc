@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MyWidgetPadrao {
-  static TextStyle myBeautifulTextStyle = TextStyle(
+  static TextStyle myBeautifulTextStyle = const TextStyle(
     color: Colors.white, // Cor do texto
     fontSize: 50.0, // Tamanho da fonte
     fontWeight: FontWeight.bold, // Peso da fonte (negrito)
@@ -15,12 +15,12 @@ class MyWidgetPadrao {
       ),
     ], // Sombreamento do texto
   );
-  static TextStyle myBeautifulTextStyleBlack = TextStyle(
-    color: Colors.black, // Cor do texto
-    fontSize: 50.0, // Tamanho da fonte
+  static TextStyle myBeautifulTextStyleBlack = const TextStyle(
+    color: Colors.blue, // Cor do texto
+    //fontSize: 50.0, // Tamanho da fonte
     fontWeight: FontWeight.bold, // Peso da fonte (negrito)
-    letterSpacing: 1.2, // Espaçamento entre caracteres
-    wordSpacing: 2.0, // Espaçamento entre palavras
+    //letterSpacing: 1.2, // Espaçamento entre caracteres
+    //wordSpacing: 2.0, // Espaçamento entre palavras
     shadows: [
       Shadow(
         color: Colors.white,
